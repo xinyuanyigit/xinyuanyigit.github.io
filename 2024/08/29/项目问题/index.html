@@ -96,7 +96,7 @@
     w.loadCSS = loadCSS;
   }
 }( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="WANG's Blog" type="application/atom+xml">
-</head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+</head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/headerBg.png"></div><!--.profile-saying
   i.fa.fa-comment
   .saying--><div class="cxo-profile-inner"><div class="profile-name">wangkehua</div><div class="profile-signature">for me</div><div class="friends"><div>FRIENDS</div><span><a href="//github.com/Longlongyu" target="_black">friendA</a></span><span><a href="//github.com/" target="_black">friendB</a></span><span><a href="//github.com/" target="_black">friendC</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">Mr.Wang's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">项目问题</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>2024-08-29</span></span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><h2 id="扫码登录的设计与实现"><a href="#扫码登录的设计与实现" class="headerlink" title="扫码登录的设计与实现"></a>扫码登录的设计与实现</h2><h3 id="用户名密码登录："><a href="#用户名密码登录：" class="headerlink" title="用户名密码登录："></a>用户名密码登录：</h3><p>在登录页面输入用户名和密码，服务端验证用户名和密码，验证失败返回登录页重新登录，验证成功生成token，存储token到redis中，返回token给前端。之后每次请求都会携带该token，验证该token，验证通过，执行后续接口，返回执行结果。验证失败，返回登录页重新登录。</p>
 <h3 id="二维码扫码登录："><a href="#二维码扫码登录：" class="headerlink" title="二维码扫码登录："></a>二维码扫码登录：</h3><p>二维码是PC端、手机端和服务端之间的桥梁。</p>
@@ -232,7 +232,7 @@
 <li>评分结果表的结果也设置了对应的属性，对于每种评分结果，遍历属性集合，从上述的Map中找到对应的属性的统计的数量，求和。</li>
 <li>遍历所有的评分结果，使用上述算法，得到最大的值，此时的评分结果就是用户的评分结果。</li>
 </ol>
-<img src="C:\Users\15461\AppData\Roaming\Typora\typora-user-images\image-20240824145753413.png" alt="image-20240824145753413" style="zoom: 80%;" />
+<img src="../images/image-20240824145753413.png" alt="image-20240824145753413" style="zoom: 80%;" />
 
 <h2 id="怎么实现AI生成题目的功能？"><a href="#怎么实现AI生成题目的功能？" class="headerlink" title="怎么实现AI生成题目的功能？"></a>怎么实现AI生成题目的功能？</h2><ol>
 <li>编写Prompt告诉AI模型需要什么样的内容，可以使用自然语言进行格式的描述。</li>
