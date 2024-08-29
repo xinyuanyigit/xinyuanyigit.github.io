@@ -1,0 +1,318 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="WANG"><meta name="renderer" content="webkit"><meta name="copyright" content="WANG"><meta name="keywords" content="WANG's Blog"><meta name="description" content=""><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>项目问题 · Mr.Wang's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="WANG's Blog" type="application/atom+xml">
+</head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">wangkehua</div><div class="profile-signature">for me</div><div class="friends"><div>FRIENDS</div><span><a href="//github.com/Longlongyu" target="_black">friendA</a></span><span><a href="//github.com/" target="_black">friendB</a></span><span><a href="//github.com/" target="_black">friendC</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">Mr.Wang's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">项目问题</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>2024-08-29</span></span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><h2 id="扫码登录的设计与实现"><a href="#扫码登录的设计与实现" class="headerlink" title="扫码登录的设计与实现"></a>扫码登录的设计与实现</h2><h3 id="用户名密码登录："><a href="#用户名密码登录：" class="headerlink" title="用户名密码登录："></a>用户名密码登录：</h3><p>在登录页面输入用户名和密码，服务端验证用户名和密码，验证失败返回登录页重新登录，验证成功生成token，存储token到redis中，返回token给前端。之后每次请求都会携带该token，验证该token，验证通过，执行后续接口，返回执行结果。验证失败，返回登录页重新登录。</p>
+<h3 id="二维码扫码登录："><a href="#二维码扫码登录：" class="headerlink" title="二维码扫码登录："></a>二维码扫码登录：</h3><p>二维码是PC端、手机端和服务端之间的桥梁。</p>
+<p>流程：</p>
+<ol>
+<li>登录页发送请求到服务端，服务端会生成一个唯一ID，并把这个唯一ID设置到redis中，设置它的过期时间。服务端返回这个唯一ID到PC端，PC端会根据这个唯一ID生成一个二维码。在这个步骤里，在redis中存储的是一个以唯一ID为键的值，它有三种状态，如果这个以唯一ID为键的值为null，表示为未扫码，有值的话表示为扫描成功，如果不存在这个key，表示为已失效。</li>
+<li>手机端扫描二维码，解析出唯一ID，然后把appId、手机端token以及解析出的唯一ID传递到服务端，服务端首先会验证手机端的token是否有效，如果无效则验证失败，有效的话会验证唯一ID，判断是否存在唯一ID，如果不存在，表示二维码已经失效了，如果存在且状态为未扫码，则生成一个PC端的token存储在redis中的这个唯一ID为键的值，其他情况都是验证失败。</li>
+<li>PC端会以轮询的方式发送异步请求向服务端查询这个唯一ID的状态，如果redis中的唯一ID为键的值为null，表示位扫码，如果这个唯一ID不存在，表示二维码已失效，如果找到这个唯一ID对应的值，表示扫码成功，同时返回这个PC端的token，提示登录成功。</li>
+</ol>
+<h2 id="简要描述一下如何使用-CompletableFuture-来并行加载数据？"><a href="#简要描述一下如何使用-CompletableFuture-来并行加载数据？" class="headerlink" title="简要描述一下如何使用 CompletableFuture 来并行加载数据？"></a>简要描述一下如何使用 <code>CompletableFuture</code> 来并行加载数据？</h2><p>在项目中，我们需要在网站主页上展示课程分类和热门课程等数据。为了提高页面加载速度，我们使用了<code>CompletableFuture</code>来并行加载这些数据。具体来说，我首先创建了两个<code>CompletableFuture</code>实例，分别用于加载课程分类和热门课程数据。然后使用<code>CompletableFuture.allOf()</code>方法将这两个任务并行执行，并在所有任务完成后执行回调方法来处理结果。</p>
+<h2 id="你有没有考虑过线程池的配置？为什么？"><a href="#你有没有考虑过线程池的配置？为什么？" class="headerlink" title="你有没有考虑过线程池的配置？为什么？"></a>你有没有考虑过线程池的配置？为什么？</h2><p>我考虑过线程池的配置。默认情况下，<code>CompletableFuture</code> 使用 <code>ForkJoinPool.commonPool()</code> 作为线程池，但是在我们的项目中，由于预计会有大量的并发请求，我创建了一个专用的线程池，并通过 <code>runAsync()</code> 方法显式地指定了这个线程池。这样做可以更好地控制并发级别和资源使用，确保系统的稳定性和响应性。</p>
+<h2 id="订单场景下的分布式锁？"><a href="#订单场景下的分布式锁？" class="headerlink" title="订单场景下的分布式锁？"></a>订单场景下的分布式锁？</h2><p>redisson实现的分布式锁。</p>
+<h2 id="本地缓存、redis缓存与数据库Mysql进行数据同步。"><a href="#本地缓存、redis缓存与数据库Mysql进行数据同步。" class="headerlink" title="本地缓存、redis缓存与数据库Mysql进行数据同步。"></a>本地缓存、redis缓存与数据库Mysql进行数据同步。</h2><ol>
+<li>DB 修改数据：现在数据库中进行数据修改</li>
+<li>通过监听 canal 消息，触发缓存的更新：使用canal监听数据库的变更操作，当检测到数据变化时，触发缓存更新。</li>
+<li>针对 redis 缓存中，因为集群中只共享一份，直接同步缓存即可</li>
+<li>针对本地缓存，因为集群中存在多分，且分散在不同的 JVM 实例中。故再借助广播 MQ 机制，通知到各个业务实例。同步本地缓存</li>
+</ol>
+<h2 id="MySQL主备复制原理"><a href="#MySQL主备复制原理" class="headerlink" title="MySQL主备复制原理"></a>MySQL主备复制原理</h2><p>Mysql的master主库将数据变更写入binlog日志文件中</p>
+<p>slave从库向master主库发起dump请求，从库将主库的binglog日志拷贝到自己的relaylog中继日志中，</p>
+<p>从库重放relaylog中继日志中的数据，将数据同步到自己的数据库中。</p>
+<h2 id="canal-工作原理"><a href="#canal-工作原理" class="headerlink" title="canal 工作原理"></a>canal 工作原理</h2><p>canal模拟Mysql中的主备复制，将自己伪装成Mysql的从库，向主库发送dump请求，Mysql的主库收到dump请求后，推送binglog日志给从库也就是canal，canal解析binlog数据。</p>
+<h2 id="使用redis怎么统计网站的UV？"><a href="#使用redis怎么统计网站的UV？" class="headerlink" title="使用redis怎么统计网站的UV？"></a>使用redis怎么统计网站的UV？</h2><p><strong>UV：指一定时间内，访问网站的不同用户的数量。</strong></p>
+<h3 id="方法一：使用incr命令。"><a href="#方法一：使用incr命令。" class="headerlink" title="方法一：使用incr命令。"></a>方法一：使用incr命令。</h3><p>incr命令是一个简单的key-value格式的计数器，用户每次访问网站，都会根据用户的唯一标识去执行incr命令，最后通过get命令来获取访问数量。但这个方法不能去重，也就是说，同一个用户访问网站两次，incr命令就会使访问量加2，不适用于UV。</p>
+<h3 id="方法二：使用set数据类型来设计。"><a href="#方法二：使用set数据类型来设计。" class="headerlink" title="方法二：使用set数据类型来设计。"></a>方法二：使用set数据类型来设计。</h3><p>set集合拥有唯一性，可以用于统计去重。通过sadd命令来进行统计访问量。通过scard命令来获取访问量。但这个方法也有一个问题，那就是需要大量内存。</p>
+<h3 id="方法三：使用BitMaps类型来设计。"><a href="#方法三：使用BitMaps类型来设计。" class="headerlink" title="方法三：使用BitMaps类型来设计。"></a>方法三：使用BitMaps类型来设计。</h3><p>BitMaps是redis中的特殊的数据类型。它用一个bit来表示某个值的状态，只存储0或1，所以它可以节省极大的内存。我们可以通过setbit命令来进行统计访问量，通过bitcount来获取访问量。但如果统计的对象很多的话，还是需要很多内存。</p>
+<h3 id="方法四：使用HyperLogLog类型来设计。"><a href="#方法四：使用HyperLogLog类型来设计。" class="headerlink" title="方法四：使用HyperLogLog类型来设计。"></a>方法四：使用HyperLogLog类型来设计。</h3><p>HyperLogLog是redis中的特殊的数据类型，它使用极小的内存就可以统计大量的元素。HyperLogLog是通过pfadd命令来添加元素进行统计，使用pfcount命令类进行获取统计量。</p>
+<h2 id="redis是怎么做一个排行榜的？"><a href="#redis是怎么做一个排行榜的？" class="headerlink" title="redis是怎么做一个排行榜的？"></a>redis是怎么做一个排行榜的？</h2><h3 id="Mysql的order-by关键字："><a href="#Mysql的order-by关键字：" class="headerlink" title="Mysql的order by关键字："></a><strong>Mysql的order by关键字：</strong></h3><p>order by关键字可以根据指定字段进行排序。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> column1,column2...</span><br><span class="line"><span class="keyword">from</span> tablename</span><br><span class="line"><span class="keyword">order</span> <span class="keyword">by</span> column1,column2... <span class="keyword">desc</span><span class="operator">/</span><span class="keyword">asc</span>;</span><br></pre></td></tr></table></figure>
+
+<p>这种方式好处是比较简单，不需要引入额外的组件，成本低。坏处是每次生成排行榜都比较耗时，对数据库的性能消耗比较大，数据量一大，业务场景一复杂就不可以了。</p>
+<p>创建一张表：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> cus_order(</span><br><span class="line">    id <span class="type">int</span>(<span class="number">11</span>) unsigned <span class="keyword">not</span> <span class="keyword">null</span> auto_increment,</span><br><span class="line">    score <span class="type">int</span>(<span class="number">11</span>) <span class="keyword">not</span> <span class="keyword">null</span> ,</span><br><span class="line">    name <span class="type">varchar</span>(<span class="number">11</span>) <span class="keyword">not</span> <span class="keyword">null</span> <span class="keyword">default</span> <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">    <span class="keyword">primary</span> key (id)</span><br><span class="line">)engine <span class="operator">=</span>innodb auto_increment<span class="operator">=</span><span class="number">100000</span> <span class="keyword">default</span> charset<span class="operator">=</span>utf8mb4;</span><br></pre></td></tr></table></figure>
+
+<p>定义一个存储过程:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">procedure</span> insert_cus_order(<span class="keyword">in</span> start_num <span class="type">int</span>,<span class="keyword">in</span> max_num <span class="type">int</span>)</span><br><span class="line"><span class="keyword">begin</span></span><br><span class="line">    <span class="keyword">declare</span> i <span class="type">int</span> <span class="keyword">default</span> start_num;</span><br><span class="line">    while i<span class="operator">&lt;</span>max_num do</span><br><span class="line">        <span class="keyword">insert</span> <span class="keyword">into</span> cus_order(id,score,name) <span class="keyword">values</span>(i,rand() <span class="operator">*</span> <span class="number">1000000</span>,concat(<span class="string">&#x27;user&#x27;</span>,i));</span><br><span class="line">        <span class="keyword">set</span> i<span class="operator">=</span>i<span class="operator">+</span><span class="number">1</span>;</span><br><span class="line">    <span class="keyword">end</span> while;</span><br><span class="line"><span class="keyword">end</span>;</span><br></pre></td></tr></table></figure>
+
+<p>执行：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">call</span> insert_cus_order(<span class="number">1</span>,<span class="number">1000000</span>);</span><br></pre></td></tr></table></figure>
+
+<p>对这100w数据根据score进行排序：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> score,name <span class="keyword">from</span> cus_order <span class="keyword">order</span> <span class="keyword">by</span> score <span class="keyword">desc</span>;</span><br></pre></td></tr></table></figure>
+
+<p>为了查看sql的执行时间，通过<code>show profiles</code>命令查看。</p>
+<p>通过<code>show variables</code>命令查看<code>profiles</code>是否是开启状态。默认情况是关闭的，通过<code>set @@profiling = 1</code>命令开启。</p>
+<p><strong>如何进行优化呢？</strong></p>
+<p><strong>加索引并且限制排序数据量。</strong></p>
+<p>对score字段加索引，并限制只查询前500的数据。</p>
+<p>适用于数据量小且业务不复杂的场景。</p>
+<h3 id="redis的sorted-set"><a href="#redis的sorted-set" class="headerlink" title="redis的sorted set"></a>redis的sorted set</h3><p>通过<code>sorted set</code>能够轻松应对百万级用户数据排序。</p>
+<p><code>sorted set</code>类似于<code>set</code>集合，但和set相比，<code>sorted set</code>增加了一个权重参数<code>score</code>，使得集合中的元素可以按照score进行有序排列，还可以通过<code>score</code>的范围获取元素列表。</p>
+<p><strong>常用命令：</strong></p>
+<p><img src="/../images/image-20240829193946274.png" alt="image-20240829193946274"></p>
+<p><strong>使用：</strong></p>
+<p>把数据添加到<code>sort set</code>中</p>
+<p><img src="/../images/image-20240829194018733.png" alt="image-20240829194018733"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">zadd cus_order_set 112.0 user1 100.0 user2 123.0 user3  147.0 user4 33.0 user5 55 user6</span><br></pre></td></tr></table></figure>
+
+<p>查询所有用户的排行榜：<code>zrevrange</code>从大到小，<code>zrange</code>从小到大</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">zrevrange cus_order_set 0 -1 withscores</span><br></pre></td></tr></table></figure>
+
+<p>只查询包含前3的排行榜：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">zrevrange cus_order_set 0 2 withscores</span><br></pre></td></tr></table></figure>
+
+<p>查询某个用户的具体排名：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">zrevrank cus_order_set &#x27;user1&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>查询某个用户的分数：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">zscore cus_order_set &#x27;user1&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>redis中只保存了排行榜所展示的数据，需要用户的具体数据的话还是要到mysql中查询。</p>
+<p><strong>复杂排行操作：</strong></p>
+<p>比如实现指定日期(最近3天)的数据排序：</p>
+<p>添加数据：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">zadd 20240823 112 user1 100 user2 123 user3</span><br><span class="line">zadd 20240824 147 user4 33 user5 55 user6</span><br><span class="line">zadd 20240825 112 user1 100 user2 123 user5</span><br></pre></td></tr></table></figure>
+
+<p>求并集：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-- 求并集</span><br><span class="line">zunionstore last_3_day 3 20240823 20240824 20240825 weights 1 1 1</span><br></pre></td></tr></table></figure>
+
+<p>查看结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">zrange last_3_day 0 -1 withscores</span><br></pre></td></tr></table></figure>
+
+<p><strong>如果不想对score进行求和，可以通过指定<code>aggregate</code>参数 来设置聚合函数：</strong></p>
+<ul>
+<li>sum：对于不同集合的相同元素使用求和作为结果集中对应元素的score。不设置<code>aggregate</code>值，默认是<code>sum</code></li>
+<li>max：对于不同集合的相同元素使用最大值作为结果集中对应元素的score。</li>
+<li>min：对于不同集合的相同元素使用最小值作为结果集中对应元素的score。</li>
+</ul>
+<p><strong>排行榜的课程包括课程标题、作者、课程图片和浏览量：</strong></p>
+<ul>
+<li>在Redis中，您可以将每个文章的信息作为一个键值对存储，键可以是文章ID，值是一个JSON字符串，包含了文章标题、作者、文字图片和浏览量等信息。</li>
+<li>对于排行榜，您可以使用Redis的Sorted Set数据结构，其中成员是文章ID，分值是根据浏览量或其他指标计算得出的排名依据。</li>
+<li>当文章信息发生变化时（比如浏览量增加），更新Redis中的相应键值对，并调整Sorted Set中的分值。</li>
+<li>要显示排行榜，首先从Redis的Sorted Set中获取前N个得分最高的文章ID。</li>
+<li>然后，根据这些文章ID从Redis中获取对应的文章信息（包括标题、作者、文字图片和浏览量等）。</li>
+<li>最后，将这些信息组合成排行榜列表并返回给前端展示。</li>
+</ul>
+<h2 id="怎么统计的浏览量？"><a href="#怎么统计的浏览量？" class="headerlink" title="怎么统计的浏览量？"></a>怎么统计的浏览量？</h2><h2 id="聚合应用平台是什么？"><a href="#聚合应用平台是什么？" class="headerlink" title="聚合应用平台是什么？"></a>聚合应用平台是什么？</h2><p>聚合应用指将两种以上的数据源加在一起，形成一个整合应用。包括人力资源管理系统中的员工信息，招聘信息，绩效信息等，还包括客户关系管理系统中的客户信息、客户反馈信息等，还包括公司的学习平台的课程信息等等，还对接了百度的搜索。</p>
+<ol>
+<li>节约了去不同搜索网站搜索资料的时间，快速切换不同网站的搜索结果，方便快速找到想要的内容；</li>
+<li>资源丰富，好的聚合搜索网站往往能够提供丰富的资源站点，能够帮助你找到想要的结果；</li>
+</ol>
+<h2 id="描述一下基于AI的答题应用共享平台这个项目"><a href="#描述一下基于AI的答题应用共享平台这个项目" class="headerlink" title="描述一下基于AI的答题应用共享平台这个项目"></a>描述一下基于AI的答题应用共享平台这个项目</h2><p>这是一个基于 Spring Boot 的 AI智能答题平台。前台用户可以创建应用并基于 AI 快速生成应用题目，设置自己的评分规则。支持检索、分享应用和在线答题，并基于AI或多种评分算法得到应用的答案。后台管理员可以审核应用、集中管理整站内容，并进行统计分析。整个系统后端可以分为：用户模块、应用模块、题目模块、评分模块、回答模块、AI模块、统计与分析模块。</p>
+<p>用户模块：提供用户的注册、登录、查询等功能。</p>
+<p>应用模块：提供应用的增删改查、分享等功能。</p>
+<p>题目模块：提供题目的增删改查，包括AI生成题目等功能。</p>
+<p>评分模块：提供应用的评分规则定制，以及进行AI评分的功能。</p>
+<p>统计与分析模块：提供热门应用排行分析，应用浏览量统计等等功能。</p>
+<p><img src="C:\Users\15461\AppData\Roaming\Typora\typora-user-images\image-20240823202603111.png" alt="image-20240823202603111"></p>
+<h2 id="为什么使用策略模式来封装不同的评分算法？有什么好处？怎么实现？"><a href="#为什么使用策略模式来封装不同的评分算法？有什么好处？怎么实现？" class="headerlink" title="为什么使用策略模式来封装不同的评分算法？有什么好处？怎么实现？"></a>为什么使用策略模式来封装不同的评分算法？有什么好处？怎么实现？</h2><p>策略模式：定义一系列算法，将每个算法封装起来，使这些算法可以相互替换。策略模式可以使算法独立于客户端而变化。</p>
+<p>策略模式的原理：</p>
+<p>定义一些独立的类封装不同算法，这里的每一种类中的算法就是一种策略，为了保证这些策略具有一致性，提供一个抽象的策略类来做算法的声明。</p>
+<p><img src="/../images/image-20240829194112658.png" alt="image-20240829194112658"></p>
+<p><strong>策略模式的优点：</strong></p>
+<p>策略类之间可以自由切换：由于策略类都实现同一个接口，所以使它们之间可以自由切换。</p>
+<p>易于扩展：增加一个新的策略只需要添加一个具体的策略类即可，基本不需要改变原有的代码，符合“开闭原则“。</p>
+<p><strong>策略模式使用场景：</strong></p>
+<p>一个系统需要动态地在几种算法中选择一种时，可将每个算法封装到策略类中。</p>
+<blockquote>
+<p>策略模式最大的作用在于分离使用算法的逻辑和算法自身实现的逻辑，这样就意味着当我们想要优化算法自身的实现逻辑时就变得非常便捷，一方面可以采用最新的算法实现逻辑，另一方面可以直接弃用旧算法而采用新算法。使用策略模式能够很方便地进行替换。</p>
+</blockquote>
+<p>一个类定义了多种行为，并且这些行为在这个类的操作中以多个条件语句的形式出现，可将每个条件分支移入它们各自的策略类中以代替这些条件语句。</p>
+<blockquote>
+<p>在实际开发中，有许多算法可以实现某一功能，如查找、排序等，通过 if-else 等条件判断语句来进行选择非常方便。但是这就会带来一个问题：当在这个算法类中封装了大量查找算法时，该类的代码就会变得非常复杂，维护也会突然就变得非常困难。虽然策略模式看上去比较笨重，但实际上在每一次新增策略时都通过新增类来进行隔离，短期虽然不如直接写 if-else 来得效率高，但长期来看，维护单一的简单类耗费的时间其实远远低于维护一个超大的复杂类。</p>
+</blockquote>
+<p>系统要求使用算法的客户不应该知道其操作的数据时，可使用策略模式来隐藏与算法相关的数据结构。</p>
+<blockquote>
+<p>如果我们不希望客户知道复杂的、与算法相关的数据结构,在具体策略类中封装算法与相关数据结构,可以提高算法的保密性与安全性。</p>
+</blockquote>
+<h2 id="如何实现测评类应用的评分算法？"><a href="#如何实现测评类应用的评分算法？" class="headerlink" title="如何实现测评类应用的评分算法？"></a>如何实现测评类应用的评分算法？</h2><ol>
+<li>测评类每道题目的答案都设置了属性，如A对应M，B对应T，C对应B，D对应I。</li>
+<li>根据用户选择的答案计算出对应属性的数量，例如 M有10个，B有10个，T有5个，I有1个，设置一个Map，key为属性值，value为对应的数量。</li>
+<li>评分结果表的结果也设置了对应的属性，对于每种评分结果，遍历属性集合，从上述的Map中找到对应的属性的统计的数量，求和。</li>
+<li>遍历所有的评分结果，使用上述算法，得到最大的值，此时的评分结果就是用户的评分结果。</li>
+</ol>
+<img src="C:\Users\15461\AppData\Roaming\Typora\typora-user-images\image-20240824145753413.png" alt="image-20240824145753413" style="zoom: 80%;" />
+
+<h2 id="怎么实现AI生成题目的功能？"><a href="#怎么实现AI生成题目的功能？" class="headerlink" title="怎么实现AI生成题目的功能？"></a>怎么实现AI生成题目的功能？</h2><ol>
+<li>编写Prompt告诉AI模型需要什么样的内容，可以使用自然语言进行格式的描述。</li>
+<li>进行系统预设、少样本学习、任务拆解等技巧优化Prompt，使AI能更好的理解和生成题目。系统预设是指预先设定一些规则或模板；少样本学习是指利用少量已有的题目训练AI模型；任务拆解则是指将复杂的任务分解为多个简单的子任务，逐个解决。</li>
+<li>通过AI平台提供的界面，测试和调整Prompt，直到得到满意的结果。</li>
+<li>为了提高响应速度，使用流式化和SSE技术进行优化。</li>
+<li>流式API允许实时接收AI生成的内容，不用等待整个内容生成完毕再一次返回。</li>
+<li>通过Server-Sent Events (SSE) 技术，让服务器向客户端实时推送数据。用SSE将生成的单道题目实时推送给前端，提高用户体验。</li>
+</ol>
+<h2 id="如何流式调用AI并实时获取AI返回的内容？"><a href="#如何流式调用AI并实时获取AI返回的内容？" class="headerlink" title="如何流式调用AI并实时获取AI返回的内容？"></a>如何流式调用AI并实时获取AI返回的内容？</h2><p>智谱AI的SDK提供了流式调用的能力，我自主封装了一个AI Manager简化了流式调用的传参，返回一个响应式对象。利用响应式编程框架RXJava来处理AI实时返回的数据，将AI返回的字符串拼接成一个一个题目，通过SSE实时推送给前端。</p>
+<h2 id="如何实现一个一个流式生成题目？"><a href="#如何实现一个一个流式生成题目？" class="headerlink" title="如何实现一个一个流式生成题目？"></a>如何实现一个一个流式生成题目？</h2><p>利用RxJava链式调用并处理AI实时返回的异步数据。通过map，filter处理字符串，通过flatmap把字符串映射为单个字符，再通过<strong>括号平衡算法</strong>准确拼接出单道题目。</p>
+<p><strong>括号平衡算法：</strong>题目是json格式的，左括号数一定等于右括号数。遍历当前字符串，用一个计数器来计数括号数，出现左括号+1，出现右括号-1，直到计数器为0时，表示一道题目，之后通过SSE技术推送题目给前端。</p>
+<h2 id="什么是SSE技术？他有什么优点和不足？适用于哪些场景？"><a href="#什么是SSE技术？他有什么优点和不足？适用于哪些场景？" class="headerlink" title="什么是SSE技术？他有什么优点和不足？适用于哪些场景？"></a>什么是SSE技术？他有什么优点和不足？适用于哪些场景？</h2><p>SSE技术是一种用于从服务器到客户端的单向、实时数据传输技术，它是基于HTTP协议实现的。</p>
+<p><strong>特点：</strong></p>
+<ul>
+<li>单向通信：SSE只支持服务器向客户端的单向通行，客户端不能向服务器发送数据。</li>
+<li>文本格式：SSE使用纯文本格式传输数据，使用HTTP响应的<code>text/evebt-stream</code>MIME类型。</li>
+<li>保持连接：SSE通过保持一个持久的HTTP连接，实现服务器向客户端推送更新。不需要客户端频繁轮询。</li>
+<li>自动重连：如果连接中断，浏览器会自动重新连接，保证数据流的连续性。</li>
+</ul>
+<p><strong>优点：</strong></p>
+<ul>
+<li>简单易用</li>
+<li>实时性</li>
+<li>标准化</li>
+<li>无需握手机制</li>
+</ul>
+<p><strong>不足：</strong></p>
+<ul>
+<li>单向通信：</li>
+<li>连接维持：需要保持持续连接，可能造成服务器资源占用。</li>
+</ul>
+<p><strong>使用场景：</strong></p>
+<ul>
+<li>实时更新：股票价格，体育比赛比分、新闻更新等需要实时推送的应用。</li>
+<li>日志监控：实时监控服务器日志或应用状态。</li>
+<li>AI对话：常见的AI模型页面对话。</li>
+</ul>
+<h2 id="使用AI的过程中，有没有出现不稳定的情况？"><a href="#使用AI的过程中，有没有出现不稳定的情况？" class="headerlink" title="使用AI的过程中，有没有出现不稳定的情况？"></a>使用AI的过程中，有没有出现不稳定的情况？</h2><p><img src="C:\Users\15461\AppData\Roaming\Typora\typora-user-images\image-20240824155549480.png" alt="image-20240824155549480"></p>
+<h2 id="在项目中如何利用缓存？怎么设计的？"><a href="#在项目中如何利用缓存？怎么设计的？" class="headerlink" title="在项目中如何利用缓存？怎么设计的？"></a>在项目中如何利用缓存？怎么设计的？</h2><p><strong>在AI评分中存在两个问题：</strong></p>
+<ul>
+<li>AI调用需要费用，如果用户对同样的应用做出同样的回答，理论会得到一样的回答，不需要每次都询问AI。存在资源浪费的问题。</li>
+<li>AI评分的响应时间较长，效率有待提高。</li>
+</ul>
+<p>考虑到减少响应时间和数据复用，选择用缓存技术来优化AI评分功能。选择成本较低的本地缓存caffeine来实现。</p>
+<p><strong>设计缓存key：</strong></p>
+<p>用户对同样应用做出一样的回答会得到同样的结果，可以将应用id和用户的答案列表作为key，因为答案列表可能会很长，所以用hash算法来压缩答案列表，节省空间。</p>
+<p><strong>value：</strong></p>
+<p>缓存AI回答的结果。为了节省空间，存储二进制数据。</p>
+<p><strong>缓存过期时间：</strong></p>
+<p>必须设置过期时间，为了节省空间。设置过期时间为1天。</p>
+<p><strong>业务流程：</strong></p>
+<ol>
+<li>在用户用AI回答前，先hash处理用户答案选择，得到摘要，拼接缓存key。</li>
+<li>通过这个key查询缓存，若命中则直接返回命中结果</li>
+<li>若未命中，则请求AI回答。</li>
+<li>正确解析AI的返回结果，将其放到缓存里。</li>
+</ol>
+<h2 id="什么是幂等设计，怎么实现的？"><a href="#什么是幂等设计，怎么实现的？" class="headerlink" title="什么是幂等设计，怎么实现的？"></a>什么是幂等设计，怎么实现的？</h2><p>使用相同参数多次调用同一接口，产生的结果或影响和单词调用结果是一样的。</p>
+<p>使用数据库唯一索引来保证幂等操作：</p>
+<p><strong>流程：</strong></p>
+<ol>
+<li>用户进入答题页面，请求后端返回一个全局唯一id</li>
+<li>用户提交回答时，不仅要提交答案列表，要包括全局唯一id</li>
+<li>后端将这个全局唯一id保存到数据库中的某个唯一索引字段上，利用数据库的唯一索引实现幂等。</li>
+</ol>
+<p>为防止用户多次提交重复答案，基于<strong>雪花算法为每次答题分配唯一id</strong>，并通过数据库主键实现 幂等设计，避免了重复的脏数据。</p>
+<p>核心是通过时间戳(亳秒)保证递增，通过机器id 、服务id 和递增序号(同一毫秒内递增)，保证唯一性。</p>
+<h2 id="什么是线程池隔离-你在项目中为什么要使用线程池隔离，有什么好处"><a href="#什么是线程池隔离-你在项目中为什么要使用线程池隔离，有什么好处" class="headerlink" title="什么是线程池隔离?你在项目中为什么要使用线程池隔离，有什么好处?"></a>什么是线程池隔离?你在项目中为什么要使用线程池隔离，有什么好处?</h2><p>线程池隔离是一种通过为不同的任务类型或者不同的资源来分配不同的线程池。这种机制可以有效的控制不同任务之间的影响，<strong>提高系统的稳定性和可靠性</strong>。</p>
+<p>如果所有的业务都使用同一个线程池，最大的问题就是不同任务之间相互影响。所以在一些敏感的场景中，需要隔离线程池，它的好处有：</p>
+<ol>
+<li>故障隔离，缩小事故范围</li>
+<li>资源隔离，防止业务之间抢占资源。同时支持更精细化的管理资源，比如不重要的场景给小一点的线程池，核心场景配置大的线程池。</li>
+<li>性能优化，一些任务的场景是CPU密集型，一些是I&#x2F;O密集型，不同任务类型需要配置不同的线程池。</li>
+</ol>
+<p>在本项目中，因为服务器资源有限，对于AI批量生成题目功能，用户分为会员和普通用户，会员会分配核心线程数更大的线程池，普通用户分配核心线程数更小的线程池。</p>
+<h2 id="点赞服务系统架构设计："><a href="#点赞服务系统架构设计：" class="headerlink" title="点赞服务系统架构设计："></a>点赞服务系统架构设计：</h2><h2 id="如何进行预估订单？"><a href="#如何进行预估订单？" class="headerlink" title="如何进行预估订单？"></a>如何进行预估订单？</h2><h3 id="Drools规则引擎的工作原理"><a href="#Drools规则引擎的工作原理" class="headerlink" title="Drools规则引擎的工作原理"></a>Drools规则引擎的工作原理</h3><h2 id="乘客下单的接口："><a href="#乘客下单的接口：" class="headerlink" title="乘客下单的接口："></a>乘客下单的接口：</h2><h2 id="实现附近的搜索功能："><a href="#实现附近的搜索功能：" class="headerlink" title="实现附近的搜索功能："></a>实现附近的搜索功能：</h2><h2 id="超卖？"><a href="#超卖？" class="headerlink" title="超卖？"></a>超卖？</h2><p><img src="C:\Users\15461\AppData\Roaming\Typora\typora-user-images\image-20240815182115597.png" alt="image-20240815182115597"></p>
+<p><img src="C:\Users\15461\AppData\Roaming\Typora\typora-user-images\image-20240815182242630.png" alt="image-20240815182242630"></p>
+<p><img src="C:\Users\15461\AppData\Roaming\Typora\typora-user-images\image-20240815182314478.png" alt="image-20240815182314478"></p>
+<p><img src="C:\Users\15461\AppData\Roaming\Typora\typora-user-images\image-20240815182338791.png" alt="image-20240815182338791"></p>
+<p><img src="C:\Users\15461\AppData\Roaming\Typora\typora-user-images\image-20240816171224083.png" alt="image-20240816171224083"></p>
+<p><img src="C:\Users\15461\AppData\Roaming\Typora\typora-user-images\image-20240817105344937.png" alt="image-20240817105344937"></p>
+</article><!-- lincense--><div class="license-wrapper"><p> <span>Author:  </span><a href="http://example.com">WANG</a></p><p> <span>Link:  </span><a href="http://example.com/2024/08/29/%E9%A1%B9%E7%9B%AE%E9%97%AE%E9%A2%98/">http://example.com/2024/08/29/%E9%A1%B9%E7%9B%AE%E9%97%AE%E9%A2%98/</a></p><p> <span>Copyright:  </span><span>All articles in this blog are licensed under <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/3.0">CC BY-NC-SA 3.0</a> unless stating additionally.</span></p></div><div class="post-paginator"><a class="nextSlogan" href="/2024/08/29/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" title="设计模式"><span>NextPost ></span><br><span class="nextTitle">设计模式</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%AB%E7%A0%81%E7%99%BB%E5%BD%95%E7%9A%84%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.</span> <span class="toc-text">扫码登录的设计与实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E5%90%8D%E5%AF%86%E7%A0%81%E7%99%BB%E5%BD%95%EF%BC%9A"><span class="toc-number">1.1.</span> <span class="toc-text">用户名密码登录：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E7%BB%B4%E7%A0%81%E6%89%AB%E7%A0%81%E7%99%BB%E5%BD%95%EF%BC%9A"><span class="toc-number">1.2.</span> <span class="toc-text">二维码扫码登录：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E8%A6%81%E6%8F%8F%E8%BF%B0%E4%B8%80%E4%B8%8B%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8-CompletableFuture-%E6%9D%A5%E5%B9%B6%E8%A1%8C%E5%8A%A0%E8%BD%BD%E6%95%B0%E6%8D%AE%EF%BC%9F"><span class="toc-number">2.</span> <span class="toc-text">简要描述一下如何使用 CompletableFuture 来并行加载数据？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%A0%E6%9C%89%E6%B2%A1%E6%9C%89%E8%80%83%E8%99%91%E8%BF%87%E7%BA%BF%E7%A8%8B%E6%B1%A0%E7%9A%84%E9%85%8D%E7%BD%AE%EF%BC%9F%E4%B8%BA%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">3.</span> <span class="toc-text">你有没有考虑过线程池的配置？为什么？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%A2%E5%8D%95%E5%9C%BA%E6%99%AF%E4%B8%8B%E7%9A%84%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%EF%BC%9F"><span class="toc-number">4.</span> <span class="toc-text">订单场景下的分布式锁？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AC%E5%9C%B0%E7%BC%93%E5%AD%98%E3%80%81redis%E7%BC%93%E5%AD%98%E4%B8%8E%E6%95%B0%E6%8D%AE%E5%BA%93Mysql%E8%BF%9B%E8%A1%8C%E6%95%B0%E6%8D%AE%E5%90%8C%E6%AD%A5%E3%80%82"><span class="toc-number">5.</span> <span class="toc-text">本地缓存、redis缓存与数据库Mysql进行数据同步。</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MySQL%E4%B8%BB%E5%A4%87%E5%A4%8D%E5%88%B6%E5%8E%9F%E7%90%86"><span class="toc-number">6.</span> <span class="toc-text">MySQL主备复制原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#canal-%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="toc-number">7.</span> <span class="toc-text">canal 工作原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8redis%E6%80%8E%E4%B9%88%E7%BB%9F%E8%AE%A1%E7%BD%91%E7%AB%99%E7%9A%84UV%EF%BC%9F"><span class="toc-number">8.</span> <span class="toc-text">使用redis怎么统计网站的UV？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E4%B8%80%EF%BC%9A%E4%BD%BF%E7%94%A8incr%E5%91%BD%E4%BB%A4%E3%80%82"><span class="toc-number">8.1.</span> <span class="toc-text">方法一：使用incr命令。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E4%BA%8C%EF%BC%9A%E4%BD%BF%E7%94%A8set%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E6%9D%A5%E8%AE%BE%E8%AE%A1%E3%80%82"><span class="toc-number">8.2.</span> <span class="toc-text">方法二：使用set数据类型来设计。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E4%B8%89%EF%BC%9A%E4%BD%BF%E7%94%A8BitMaps%E7%B1%BB%E5%9E%8B%E6%9D%A5%E8%AE%BE%E8%AE%A1%E3%80%82"><span class="toc-number">8.3.</span> <span class="toc-text">方法三：使用BitMaps类型来设计。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E5%9B%9B%EF%BC%9A%E4%BD%BF%E7%94%A8HyperLogLog%E7%B1%BB%E5%9E%8B%E6%9D%A5%E8%AE%BE%E8%AE%A1%E3%80%82"><span class="toc-number">8.4.</span> <span class="toc-text">方法四：使用HyperLogLog类型来设计。</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis%E6%98%AF%E6%80%8E%E4%B9%88%E5%81%9A%E4%B8%80%E4%B8%AA%E6%8E%92%E8%A1%8C%E6%A6%9C%E7%9A%84%EF%BC%9F"><span class="toc-number">9.</span> <span class="toc-text">redis是怎么做一个排行榜的？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Mysql%E7%9A%84order-by%E5%85%B3%E9%94%AE%E5%AD%97%EF%BC%9A"><span class="toc-number">9.1.</span> <span class="toc-text">Mysql的order by关键字：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#redis%E7%9A%84sorted-set"><span class="toc-number">9.2.</span> <span class="toc-text">redis的sorted set</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%8E%E4%B9%88%E7%BB%9F%E8%AE%A1%E7%9A%84%E6%B5%8F%E8%A7%88%E9%87%8F%EF%BC%9F"><span class="toc-number">10.</span> <span class="toc-text">怎么统计的浏览量？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%81%9A%E5%90%88%E5%BA%94%E7%94%A8%E5%B9%B3%E5%8F%B0%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">11.</span> <span class="toc-text">聚合应用平台是什么？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8F%8F%E8%BF%B0%E4%B8%80%E4%B8%8B%E5%9F%BA%E4%BA%8EAI%E7%9A%84%E7%AD%94%E9%A2%98%E5%BA%94%E7%94%A8%E5%85%B1%E4%BA%AB%E5%B9%B3%E5%8F%B0%E8%BF%99%E4%B8%AA%E9%A1%B9%E7%9B%AE"><span class="toc-number">12.</span> <span class="toc-text">描述一下基于AI的答题应用共享平台这个项目</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F%E6%9D%A5%E5%B0%81%E8%A3%85%E4%B8%8D%E5%90%8C%E7%9A%84%E8%AF%84%E5%88%86%E7%AE%97%E6%B3%95%EF%BC%9F%E6%9C%89%E4%BB%80%E4%B9%88%E5%A5%BD%E5%A4%84%EF%BC%9F%E6%80%8E%E4%B9%88%E5%AE%9E%E7%8E%B0%EF%BC%9F"><span class="toc-number">13.</span> <span class="toc-text">为什么使用策略模式来封装不同的评分算法？有什么好处？怎么实现？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E6%B5%8B%E8%AF%84%E7%B1%BB%E5%BA%94%E7%94%A8%E7%9A%84%E8%AF%84%E5%88%86%E7%AE%97%E6%B3%95%EF%BC%9F"><span class="toc-number">14.</span> <span class="toc-text">如何实现测评类应用的评分算法？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%8E%E4%B9%88%E5%AE%9E%E7%8E%B0AI%E7%94%9F%E6%88%90%E9%A2%98%E7%9B%AE%E7%9A%84%E5%8A%9F%E8%83%BD%EF%BC%9F"><span class="toc-number">15.</span> <span class="toc-text">怎么实现AI生成题目的功能？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E6%B5%81%E5%BC%8F%E8%B0%83%E7%94%A8AI%E5%B9%B6%E5%AE%9E%E6%97%B6%E8%8E%B7%E5%8F%96AI%E8%BF%94%E5%9B%9E%E7%9A%84%E5%86%85%E5%AE%B9%EF%BC%9F"><span class="toc-number">16.</span> <span class="toc-text">如何流式调用AI并实时获取AI返回的内容？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E4%B8%80%E4%B8%AA%E6%B5%81%E5%BC%8F%E7%94%9F%E6%88%90%E9%A2%98%E7%9B%AE%EF%BC%9F"><span class="toc-number">17.</span> <span class="toc-text">如何实现一个一个流式生成题目？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFSSE%E6%8A%80%E6%9C%AF%EF%BC%9F%E4%BB%96%E6%9C%89%E4%BB%80%E4%B9%88%E4%BC%98%E7%82%B9%E5%92%8C%E4%B8%8D%E8%B6%B3%EF%BC%9F%E9%80%82%E7%94%A8%E4%BA%8E%E5%93%AA%E4%BA%9B%E5%9C%BA%E6%99%AF%EF%BC%9F"><span class="toc-number">18.</span> <span class="toc-text">什么是SSE技术？他有什么优点和不足？适用于哪些场景？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8AI%E7%9A%84%E8%BF%87%E7%A8%8B%E4%B8%AD%EF%BC%8C%E6%9C%89%E6%B2%A1%E6%9C%89%E5%87%BA%E7%8E%B0%E4%B8%8D%E7%A8%B3%E5%AE%9A%E7%9A%84%E6%83%85%E5%86%B5%EF%BC%9F"><span class="toc-number">19.</span> <span class="toc-text">使用AI的过程中，有没有出现不稳定的情况？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%A8%E9%A1%B9%E7%9B%AE%E4%B8%AD%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8%E7%BC%93%E5%AD%98%EF%BC%9F%E6%80%8E%E4%B9%88%E8%AE%BE%E8%AE%A1%E7%9A%84%EF%BC%9F"><span class="toc-number">20.</span> <span class="toc-text">在项目中如何利用缓存？怎么设计的？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%B9%82%E7%AD%89%E8%AE%BE%E8%AE%A1%EF%BC%8C%E6%80%8E%E4%B9%88%E5%AE%9E%E7%8E%B0%E7%9A%84%EF%BC%9F"><span class="toc-number">21.</span> <span class="toc-text">什么是幂等设计，怎么实现的？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E7%BA%BF%E7%A8%8B%E6%B1%A0%E9%9A%94%E7%A6%BB-%E4%BD%A0%E5%9C%A8%E9%A1%B9%E7%9B%AE%E4%B8%AD%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E4%BD%BF%E7%94%A8%E7%BA%BF%E7%A8%8B%E6%B1%A0%E9%9A%94%E7%A6%BB%EF%BC%8C%E6%9C%89%E4%BB%80%E4%B9%88%E5%A5%BD%E5%A4%84"><span class="toc-number">22.</span> <span class="toc-text">什么是线程池隔离?你在项目中为什么要使用线程池隔离，有什么好处?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%82%B9%E8%B5%9E%E6%9C%8D%E5%8A%A1%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%EF%BC%9A"><span class="toc-number">23.</span> <span class="toc-text">点赞服务系统架构设计：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E8%BF%9B%E8%A1%8C%E9%A2%84%E4%BC%B0%E8%AE%A2%E5%8D%95%EF%BC%9F"><span class="toc-number">24.</span> <span class="toc-text">如何进行预估订单？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Drools%E8%A7%84%E5%88%99%E5%BC%95%E6%93%8E%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="toc-number">24.1.</span> <span class="toc-text">Drools规则引擎的工作原理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B9%98%E5%AE%A2%E4%B8%8B%E5%8D%95%E7%9A%84%E6%8E%A5%E5%8F%A3%EF%BC%9A"><span class="toc-number">25.</span> <span class="toc-text">乘客下单的接口：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E9%99%84%E8%BF%91%E7%9A%84%E6%90%9C%E7%B4%A2%E5%8A%9F%E8%83%BD%EF%BC%9A"><span class="toc-number">26.</span> <span class="toc-text">实现附近的搜索功能：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B6%85%E5%8D%96%EF%BC%9F"><span class="toc-number">27.</span> <span class="toc-text">超卖？</span></a></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

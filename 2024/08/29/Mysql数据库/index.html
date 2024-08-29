@@ -1,0 +1,384 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="WANG"><meta name="renderer" content="webkit"><meta name="copyright" content="WANG"><meta name="keywords" content="WANG's Blog"><meta name="description" content=""><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>Mysql数据库 · Mr.Wang's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="WANG's Blog" type="application/atom+xml">
+</head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">wangkehua</div><div class="profile-signature">for me</div><div class="friends"><div>FRIENDS</div><span><a href="//github.com/Longlongyu" target="_black">friendA</a></span><span><a href="//github.com/" target="_black">friendB</a></span><span><a href="//github.com/" target="_black">friendC</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">Mr.Wang's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">Mysql数据库</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>2024-08-29</span></span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><h2 id="1-外键是什么？"><a href="#1-外键是什么？" class="headerlink" title="1.外键是什么？"></a>1.外键是什么？</h2><p>外键是一种用来与其他表建立联系的字段的名称，它是另一张表的主键，外键可以重复，可以有空值。并且一张表里可以有多个外键。</p>
+<h2 id="2-为什么有的公司会禁止使用外键？"><a href="#2-为什么有的公司会禁止使用外键？" class="headerlink" title="2.为什么有的公司会禁止使用外键？"></a>2.为什么有的公司会禁止使用外键？</h2><ol>
+<li>外键更适用于单机系统和低并发场景，不适合在分布式、高并发场景使用。</li>
+<li>外键约束会导致级联更新或删除，级联更新可能会影响到其他表中的数据，造成数据不一致的问题。</li>
+<li>在分布式系统中，在多个数据源中进行外键约束会难以实现。</li>
+<li>在高并发场景下，外键约束会造成额外的系统消耗，因为在进行数据的插入和删除时，数据库会检查引用的完整性。</li>
+<li>一般会在应用层进行逻辑控制。</li>
+</ol>
+<h2 id="3-什么是存储过程"><a href="#3-什么是存储过程" class="headerlink" title="3.什么是存储过程?"></a>3.什么是存储过程?</h2><p>我也没用过存储过程，我只知道它的一些概念和用法。</p>
+<p>存储过程简单来说就是预先编写好许多sql语句，把这个sql语句集合存储在数据库服务器上，之后可以通过指定的名称进行调用执行。</p>
+<p><strong>存储过程的优点有：</strong></p>
+<ol>
+<li>具备可重用性：存储过程是把一组sql语句封装在一起，作为一个执行单元，一旦创建，存储过程就可以在不同的程序中去调用执行。</li>
+<li>灵活性：存储过程可以传递参数，也可以包含控制流语句，使其更加灵活。</li>
+<li>提高性能：因为存储过程实在数据库服务中的，减少了客户端和服务器之间的数据传输，减少了网络延迟，提高了数据的处理速度。</li>
+<li>减少了复杂性：因为存储过程是一组sql语句的集合，所以可以包含许多复杂的SQL语句，减少了复杂性。</li>
+</ol>
+<h2 id="4-drop、delete-与-truncate-区别？"><a href="#4-drop、delete-与-truncate-区别？" class="headerlink" title="4.drop、delete 与 truncate 区别？"></a>4.drop、delete 与 truncate 区别？</h2><ol>
+<li><code>drop</code> 语句指<code>drop tablename</code>，表示删除表中的数据和表的结构。</li>
+<li><code>truncate</code>语句指<code>truncate tablename</code>，表示清空表中的数据，不会影响表的结构，并且会把自增值重置和索引恢复到初始大小。</li>
+<li><code>delete</code>语句指<code>delete tablename where id = #&#123;id&#125;</code> 或 <code>delete tablename</code> ，前一种表示删除对应id的数据，不会影响表的结构。第二种指删除表中的所有的数据，不会影响表的结构。 </li>
+<li><code>truncate</code> 和 <code>drop</code> 属于 DDL(数据定义语言)语句,<code>delete</code>表示数据库操作语句。</li>
+</ol>
+<h2 id="5-整数类型的-UNSIGNED-属性有什么用？"><a href="#5-整数类型的-UNSIGNED-属性有什么用？" class="headerlink" title="5.整数类型的 UNSIGNED 属性有什么用？"></a>5.整数类型的 UNSIGNED 属性有什么用？</h2><p>Mysql中的整数类型可以使用unsigned属性来修饰，表示无符号整数。使用过unsigned属性修饰的整数的取值范围会大一倍，因为它不需要存储负数。如tinyint 的范围时-128<del>127，如果用tinyint unsigned修饰，它的范围为0</del>255；</p>
+<p>对于从 0 开始递增的 ID 列，使用 UNSIGNED 属性可以非常适合，因为不允许负值并且可以拥有更大的上限范围，提供了更多的 ID 值可用。</p>
+<h2 id="6-CHAR和VARCHAR的区别？"><a href="#6-CHAR和VARCHAR的区别？" class="headerlink" title="6.CHAR和VARCHAR的区别？"></a>6.CHAR和VARCHAR的区别？</h2><p>主要区别在于：</p>
+<ol>
+<li>char是定长字符串，varchar是变长字符串。</li>
+<li>char在存储时会在右边用空格填充以达到指定长度，检索时会去掉字符串，varchar会用1或2个字节来存储字符串的长度，进行检索时不会处理。</li>
+<li>CHAR 更适合存储长度较短或者长度都差不多的字符串，例如 Bcrypt 算法、MD5 算法加密后的密码、身份证号码。VARCHAR 类型适合存储长度不确定或者差异较大的字符串，例如用户昵称、文章标题等。</li>
+</ol>
+<h2 id="7-DECIMAL和FLOAT-DOUBLE的区别是什么？"><a href="#7-DECIMAL和FLOAT-DOUBLE的区别是什么？" class="headerlink" title="7.DECIMAL和FLOAT&#x2F;DOUBLE的区别是什么？"></a>7.DECIMAL和FLOAT&#x2F;DOUBLE的区别是什么？</h2><ol>
+<li>decimal和float的区别主要在于：</li>
+<li>decimal是定点小数，float是浮点数。</li>
+<li>decimal可以存储精确的小数值，float只能存储近似的小数值。decimal类型与Java中的类BigDecimal相对应。</li>
+</ol>
+<h2 id="8-为什么-MySQL-不建议使用-NULL-作为列默认值"><a href="#8-为什么-MySQL-不建议使用-NULL-作为列默认值" class="headerlink" title="8.为什么 MySQL 不建议使用 NULL 作为列默认值"></a>8.为什么 MySQL 不建议使用 <code>NULL</code> 作为列默认值</h2><ol>
+<li>数据一致性：使用null作为默认值时，可能会造成数据不一致的问题。因为我们不能判断这个null值时默认值还是被有意设置的。</li>
+<li>查询变的复杂了一点：当字段设置默认值为null时，我们进行判断时，是使用is null或is not null 来判断的，而不是使用数学符合来判断的。</li>
+<li>也会影响到索引的查询效率。</li>
+<li>对于某些函数来说，会忽略掉null值，比如sum()、avg()，还有count()函数，如果是count(*)会统计所有的数据，如果传的是字段名，会忽略掉null值。</li>
+<li>在进行连表查询时，null&#x3D;null会返回未知值，产生错误。</li>
+<li>对于业务逻辑来说也会增加复杂性。</li>
+</ol>
+<h2 id="9-MyISAM和InnoDB有什么区别？"><a href="#9-MyISAM和InnoDB有什么区别？" class="headerlink" title="9.MyISAM和InnoDB有什么区别？"></a>9.MyISAM和InnoDB有什么区别？</h2><p><strong>1.是否支持行级锁</strong></p>
+<p>MyISAM只支持表级锁，也就是说，它锁住的是一张表，在并发写的情况下，性能太差。而InnoDB支持表级锁和行级锁，默认是行级锁，在并发写的情况下，性能会好很多。</p>
+<p><strong>2.是否支持事务</strong></p>
+<p>MyISAM 不提供事务支持。InnoDB 提供事务支持，实现和定义了四个隔离级别，具有commit和rollback事务的能力。并且，InnoDB 默认使用的 REPEATABLE-READ（可重读）隔离级别，它是可以解决幻读问题发生的，（是基于 MVCC 和 Next-Key Lock来解决的）。</p>
+<p><strong>3.是否支持外键</strong></p>
+<p>MyISAM 不支持，而 InnoDB 支持。</p>
+<p><strong>4.是否支持数据库异常崩溃后的安全恢复</strong></p>
+<p>MyISAM 不支持，而 InnoDB 支持。</p>
+<p>使用InnoDB存储引擎在数据库异常崩溃后，数据库重新启动时会通过redolog来进行数据的恢复。</p>
+<p><strong>5.是否支持 MVCC</strong></p>
+<p>MyISAM 不支持，而 InnoDB 支持。</p>
+<p>MVCC 可以看作是行级锁的一个升级，可以有效减少加锁操作，提高性能。</p>
+<p><strong>6.性能有差别。</strong></p>
+<p>InnoDB 的性能比 MyISAM 更强大，不管是在读写混合模式下还是只读模式下，随着 CPU 核数的增加，InnoDB 的读写能力呈线性增长。MyISAM 因为读写不能并发，它的处理能力跟核数没关系。</p>
+<p><strong>7.数据缓存策略和机制实现不同。</strong></p>
+<p>InnoDB 使用缓冲池（Buffer Pool）缓存数据页和索引页，MyISAM 使用键缓存（Key Cache）仅缓存索引页而不缓存数据页。</p>
+<h2 id="10-索引是什么"><a href="#10-索引是什么" class="headerlink" title="10.索引是什么?"></a>10.索引是什么?</h2><p>索引是一种快速查找和检索数据的数据结构,其本质可以看出是一种排序好的数据结构。索引就相当于目录,当我们一个字时,我们只需要在目录中找到该字对应的页码,直接翻到该页码就找到了。</p>
+<p>索引的实现有很多数据类型，常见的有B树、B+树和hash等等。</p>
+<p>优点：</p>
+<ol>
+<li>创建索引可以大大减少数据检索数据量，提高数据的查询效率，减少磁盘I&#x2F;O次数。</li>
+<li>通过创建唯一索引可以保证数据库表中的数据的唯一性。</li>
+</ol>
+<p>缺点：</p>
+<ol>
+<li>创建索引和维护索引需要消耗额外的时间，在进行数据的增删改时，如果数据有索引，需要动态的修改索引，降低sql执行效率。</li>
+<li>索引需要物理文件存储，需要消耗一定的空间。</li>
+</ol>
+<h2 id="11-索引底层数据结构选型"><a href="#11-索引底层数据结构选型" class="headerlink" title="11.索引底层数据结构选型"></a>11.索引底层数据结构选型</h2><h3 id="Hash-表"><a href="#Hash-表" class="headerlink" title="Hash 表"></a>Hash 表</h3><p>hash表是key-value键值对集合，通过键(key)可以快速获取值(value)。原理是hash算法，通过hash算法可以快速计算出index，然后通过index可以快速获取值。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hash = hashfunc(key)</span><br><span class="line">index = hash % array_size</span><br></pre></td></tr></table></figure>
+
+<p>但是hash算法存在一个哈希冲突的问题，也就是说多个key得到同一个hash值。通常情况下使用链地址法来解决。链地址法指就是将哈希冲突的数据放到链表中。Java中的HashMap就是这样解决的。</p>
+<p>为了减少 Hash 冲突的发生，一个好的哈希函数应该<strong>“均匀地”</strong>将数据分布在整个可能的哈希值集合中。MySQL 的 InnoDB 存储引擎不直接支持常规的哈希索引，但是，InnoDB 存储引擎中存在一种特殊的“自适应哈希索引”（Adaptive Hash Index），自适应哈希索引并不是传统意义上的纯哈希索引，而是结合了 B+Tree 和哈希索引的特点，以便更好地适应实际应用中的数据访问模式和性能需求。自适应哈希索引的每个哈希桶实际上是一个小型的 B+Tree 结构。这个 B+Tree 结构可以存储多个键值对，而不仅仅是一个键。这有助于减少哈希冲突链的长度，提高了索引的效率。</p>
+<p><strong>为什么 MySQL 没有使用其作为索引的数据结构呢？</strong><br>因为hash索引不支持顺序查找和范围查找。</p>
+<h3 id="二叉查找树-BST"><a href="#二叉查找树-BST" class="headerlink" title="二叉查找树(BST)"></a>二叉查找树(BST)</h3><p>二叉查找树是一种基于二叉树的数据结构。它的特点：</p>
+<p>1.左子树的所有节点的值都小于根节点。</p>
+<p>2.右子树的所有节点的值都大于根节点。</p>
+<p>3.左右子树也分别是二叉查找树。</p>
+<p>当二叉查找树是平衡的时候，也就是树的每个节点的左右子树深度相差不超过 1 的时候，它的查找效率为O(logN)，当二叉查找树不平衡的时候，可能会退化成一个链表结构，它的查找效率为O(N)。<strong>二叉查找树的性能非常依赖于它的平衡程度，这就导致其不适合作为 MySQL 底层索引的数据结构。</strong></p>
+<h3 id="AVL树-二叉平衡树"><a href="#AVL树-二叉平衡树" class="headerlink" title="AVL树(二叉平衡树)"></a>AVL树(二叉平衡树)</h3><p>AVL树的特点是保证任何节点的左右子树的高度不相差1，它的查找、插入和删除在最坏和平均的情况下时间复杂都是O(logN)。AVL树采用了自旋操作来保证平衡，主要有四种旋转操作:LL旋转、RR旋转、LR旋转和RL旋转。</p>
+<p>由于AVL树需要频繁的进行自旋操作来保证平衡，因此会有较大的计算开销从而降低数据库的写操作性能。并且，AVL树的每个节点只能存储一个数据，每次进行磁盘I&#x2F;O读写时只能读取一个节点的数据，当查询的数据分布在多个节点上时，那么就需要进行多次磁盘I&#x2F;O。而磁盘I&#x2F;O是一个耗时的操作，所以我们在设计数据库时应该尽量减少磁盘I&#x2F;O的次数。所以在实际应用中，AVL树用的不多。</p>
+<h3 id="红黑树"><a href="#红黑树" class="headerlink" title="红黑树()"></a>红黑树()</h3><p>红黑树是一种自平衡二叉查找树，通过在插入和删除节点时进行颜色变换和旋转操作，使得树始终保持平衡状态，它具有以下特点：</p>
+<ol>
+<li>每个节点非红即黑；</li>
+<li>根节点总是黑色的；</li>
+<li>每个叶子节点都是黑色的空节点（NIL 节点）；</li>
+<li>如果节点是红色的，则它的子节点必须是黑色的（反之不一定）；</li>
+<li>从任意节点到它的叶子节点或空子节点的每条路径，必须包含相同数目的黑色节点（即相同的黑色高度）。</li>
+</ol>
+<p>与平衡二叉树相比，红黑树不需要保证严格的平衡，红黑树的插入和删除操作效率大大提高了，因为红黑树在插入和删除节点时只需进行 O(1) 次数的旋转和变色操作即可保持基本平衡状态。正是如此，红黑树的树可能会很深，查询效率可能会有所下降，因为树深了，就需要更多的磁盘I&#x2F;O，这也是Mysql没使用红黑树的原因。</p>
+<p><strong>红黑树的应用还是比较广泛的，TreeMap、TreeSet 以及 JDK1.8 的 HashMap 底层都用到了红黑树。</strong></p>
+<h3 id="B树和B-树"><a href="#B树和B-树" class="headerlink" title="B树和B+树"></a>B树和B+树</h3><p>B 树被称为 <strong>多路平衡查找树</strong>，而B+树是B树的变种。</p>
+<p><strong>B 树&amp; B+树两者有何异同呢？</strong></p>
+<ol>
+<li>B 树的所有节点既存放键(key) 也存放数据(data)，而 B+树只有叶子节点存放 key 和 data，其他的节点只存放 key。</li>
+<li>B 树的叶子节点都是独立的;B+树的叶子节点有一个指针指向与它相邻的叶子节点。</li>
+<li>B 树的检索的过程相当于对范围内的每个节点做二分查找，可能还没有到达叶子节点，检索就结束了。而 B+树的检索效率就很稳定了，任何查找都是从根节点到叶子节点的过程，叶子节点的顺序检索很明显。</li>
+<li>在 B 树中进行范围查询时，首先找到要查找的下限，然后对 B 树进行中序遍历，直到找到查找的上限；而 B+树的范围查询，只需要对链表进行遍历即可。</li>
+</ol>
+<p>综上，B+树与 B 树相比，具备<strong>更少的 IO 次数</strong>、<strong>更稳定的查询效率</strong>和<strong>更适于范围查询</strong>这些优势。</p>
+<p><strong>在 MySQL 中，MyISAM 引擎和 InnoDB 引擎都是使用 B+Tree 作为索引结构，但是，两者的实现方式不太一样。</strong>(下面的内容整理自《Java 工程师修炼之道》)</p>
+<blockquote>
+<p>MyISAM 引擎中，B+Tree 叶节点的 data 域存放的是数据记录的地址。在索引检索的时候，首先按照 B+Tree 搜索算法搜索索引，如果指定的 Key 存在，则取出其 data 域的值，然后以 data 域的值为地址读取相应的数据记录。这被称为“<strong>非聚簇索引（非聚集索引）</strong>”。</p>
+<p>InnoDB 引擎中，其数据文件本身就是索引文件。相比 MyISAM，索引文件和数据文件是分离的，其表数据文件本身就是按 B+Tree 组织的一个索引结构，树的叶节点 data 域保存了完整的数据记录。这个索引的 key 是数据表的主键，因此 InnoDB 表数据文件本身就是主索引。这被称为“<strong>聚簇索引（聚集索引）</strong>”，而其余的索引都作为 <strong>辅助索引</strong> ，辅助索引的 data 域存储相应记录主键的值而不是地址，这也是和 MyISAM 不同的地方。在根据主索引搜索时，直接找到 key 所在的节点即可取出数据；在根据辅助索引查找时，则需要先取出主键的值，再走一遍主索引。 因此，在设计表的时候，不建议使用过长的字段作为主键，也不建议使用非单调的字段作为主键，这样会造成主索引频繁分裂。</p>
+</blockquote>
+<h2 id="12-索引类型"><a href="#12-索引类型" class="headerlink" title="12.索引类型"></a>12.索引类型</h2><p><strong>按索引的底层存储方式划分的话分为：</strong></p>
+<p><strong>聚簇索引：</strong>聚簇索引是索引结构和数据文件存放在一起的，InnoDB中的主键索引就是聚簇索引。在 MySQL 中，InnoDB 存储引擎中的<code>.ibd</code>文件就包含了该表的索引和数据，对于 InnoDB 引擎表来说，该表的索引的每个非叶子节点存储索引的key，叶子节点存储索引的key和索引对应的数据。</p>
+<p>优点：<strong>查询速度非常快</strong>，特别对于<strong>范围查找和排序查找</strong>来说。</p>
+<p><strong>缺点：因为底层是一个B+树结构，它存储了索引对应的key和数据，占用了磁盘空间，且如果对聚簇索引的字段进行修改、删除操作时，会造成动态修改这个索引结构，对于系统性能来说这是个不小的开销。</strong></p>
+<p><strong>非聚簇索引：</strong>非聚簇索引是指索引结构和数据分开存放，所有的二级索引都是非聚簇索引。MySQL 的 MyISAM 存储引擎，不管主键还是非主键，使用的都是非聚簇索引。</p>
+<p>非聚簇索引的叶子节点并不一定存放数据的指针，因为在InnoDB中，二级索引的叶子节点就存放的是主键key，然后再根据主键回表查数据。</p>
+<p><strong>非聚簇索引不一定要回表查询。比如查询设置了覆盖索引的字段的值的时候就不需要进行回表查询。</strong></p>
+<p><strong>按应用维度划分的话分为：</strong></p>
+<ul>
+<li>主键索引：目的是加速查询，列的值必须唯一且不能为null，一张表中只能有一个主键索引。如果没有显式指定主键索引，那么InnoDB存储引擎会自动寻找表中的唯一索引且该字段不能为null值，作为主键索引，如果表中没有唯一索引，那么InnoDB存储引擎会自动创建一个6比特的自增主键。</li>
+<li>唯一索引：主要目的是为了表示该字段的值是唯一的，可以为null，并且一个表中可以有多个唯一索引。</li>
+<li>联合索引：多个字段一起组成的索引，专门用于组合查询。</li>
+<li>覆盖索引：一个索引中就可以包含所有需要查询的字段的值，可以大大加快查询的效率。<strong>覆盖索引即需要查询的字段正好是索引的字段，那么直接根据该索引，就可以查到数据了，而无需回表查询。</strong></li>
+<li>普通索引：目的就是加快查询速度，一张表中可以有多个。</li>
+<li>全文索引：全文索引一般只适用于char、varchar、text类型的字段，目的是为了在长文本中找到所需的关键字。在Mysql5.6之后，InnoDB存储引擎才支持。但我没在Mysql中用过。这种全文检索的话，一般使用ElasticSearch搜索引擎。</li>
+</ul>
+<h3 id="什么是回表？"><a href="#什么是回表？" class="headerlink" title="什么是回表？"></a>什么是回表？</h3><p>再InnoDB存储引擎中，非主键索引的叶子节点存储的是主键索引的值，当使用非主键索引进行查询时，数据库会先找到该主键的值，再根据这个主键值去定位和检索完整的数据，这个过程就叫做回表。如果查询的字段刚好是索引的值，那么就无需回表，直接查询到数据。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">如主键索引，如果一条 SQL 需要查询主键，那么正好根据主键索引就可以查到主键。再如普通索引，如果一条 SQL 需要查询 name，name 字段正好有索引，那么直接根据这个索引就可以查到数据，也无需回表。</span><br></pre></td></tr></table></figure>
+
+<h3 id="联合索引：多个字段一起组成的索引"><a href="#联合索引：多个字段一起组成的索引" class="headerlink" title="联合索引：多个字段一起组成的索引"></a>联合索引：多个字段一起组成的索引</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> INDEX index_product_no_name <span class="keyword">ON</span> product(product_no, name);</span><br></pre></td></tr></table></figure>
+
+<p>联合索引是按创建联合索引时的从做到右顺序进行排序的，比如说，我创建了一个联合索引，它的从左到右的顺序为product_no、name，当它底层使用B+树进行排序时，会按照从左到右的顺序排序，先按product_no排序，然后product_no相同的情况下，按照name排序。</p>
+<h3 id="最左匹配原则"><a href="#最左匹配原则" class="headerlink" title="最左匹配原则"></a>最左匹配原则</h3><p>使用联合索引时，存在<strong>最左匹配原则</strong>，也就是按照最左优先的方式进行索引的匹配。在使用联合索引进行匹配时，如果不遵循最左匹配原则，联合索引就会失效。</p>
+<p>比如，如果创建了一个 (a, b, c) 联合索引，如果查询条件是以下这几种，就可以使用联合索引：</p>
+<ul>
+<li>where a&#x3D;1；</li>
+<li>where a&#x3D;1 and b&#x3D;2 and c&#x3D;3；</li>
+<li>where a&#x3D;1 and b&#x3D;2；</li>
+</ul>
+<p><strong>需要注意的是，因为有查询优化器，所以 a 字段在 where 子句的顺序并不重要。</strong></p>
+<p>如果查询条件是以下这几种，因为不符合最左匹配原则，所以无法匹配上联合索引，联合索引就会失效:</p>
+<ul>
+<li>where b&#x3D;2；</li>
+<li>where c&#x3D;3；</li>
+<li>where b&#x3D;2 and c&#x3D;3；</li>
+</ul>
+<p>上面这些查询条件之所以会失效，是因为(a, b, c) 联合索引，是先按 a 排序，在 a 相同的情况再按 b 排序，在 b 相同的情况再按 c 排序。所以，<strong>b 和 c 是全局无序，局部相对有序的</strong>，这样在没有遵循最左匹配原则的情况下，是无法利用到索引的。</p>
+<p><img src="/../images/image-20240829194329331.png" alt="image-20240829194329331"></p>
+<p>可以看到，a 是全局有序的（1, 2, 2, 3, 4, 5, 6, 7 ,8），而 b 是全局是无序的（12，7，8，2，3，8，10，5，2）。因此，直接执行 where b &#x3D; 2 这种查询条件没有办法利用联合索引的，<strong>利用索引的前提是索引里的 key 是有序的</strong>。</p>
+<p>只有在 a 相同的情况才，b 才是有序的，比如 a 等于 2 的时候，b 的值为（7，8），这时就是有序的，这个有序状态是局部的，因此，执行 where a &#x3D; 2 and b &#x3D; 7 这种查询条件时， a 和 b 字段能用到联合索引的，也就是联合索引生效了。</p>
+<p><strong>联合索引的最左匹配原则，在遇到范围查询（如 &gt;、&lt;）的时候，就会停止匹配，也就是范围查询的字段可以用到联合索引，但是在范围查询字段后面的字段无法用到联合索引。注意，对于 &gt;&#x3D;、&lt;&#x3D;、BETWEEN、like 前缀匹配的范围查询，并不会停止匹配。</strong></p>
+<h2 id="13-何为事务？"><a href="#13-何为事务？" class="headerlink" title="13.何为事务？"></a>13.何为事务？</h2><p><strong>事务是逻辑上的一组操作，要么都执行，要么都不执行。</strong></p>
+<h3 id="何为数据库事务？"><a href="#何为数据库事务？" class="headerlink" title="何为数据库事务？"></a>何为数据库事务？</h3><p>数据库事务可以保证多个对数据库的操作（也就是 SQL 语句）构成一个逻辑上的整体。构成这个逻辑上的整体的这些数据库操作遵循：<strong>要么全部执行成功,要么全部不执行</strong> </p>
+<p>关系型数据库（例如：<code>MySQL</code>、<code>SQL Server</code>、<code>Oracle</code> 等）事务都有 <strong>ACID</strong> 特性：</p>
+<p><strong>原子性</strong>（<code>Atomicity</code>）：事务的最小执行单位，不再进行分割，原子性保证了数据库中的这些操作要么都执行成功，要么都执行失败。</p>
+<p><strong>一致性</strong>（<code>Consistency</code>）：在执行事务的前后，数据都要保证一致。</p>
+<p><strong>隔离性</strong>（<code>Isolation</code>）：并发访问数据库时，一个用户的事务不能被其他事务所干扰，每个事务是相互独立的。</p>
+<p><strong>持久性</strong>（<code>Durability</code>）：一个事务提交后，它对数据库的数据的修改是持久的，就是数据库发生宕机，也不会对其有任何影响。</p>
+<p><strong>只有保证了事务的持久性、原子性、隔离性之后，一致性才能得到保障。也就是说 A、I、D 是手段，C 是目的！</strong></p>
+<h3 id="并发事务带来了哪些问题？"><a href="#并发事务带来了哪些问题？" class="headerlink" title="并发事务带来了哪些问题？"></a>并发事务带来了哪些问题？</h3><p>多个事务并发运行，经常会操作相同的数据来完成各自的任务（多个用户对同一数据进行操作）。</p>
+<h4 id="脏读："><a href="#脏读：" class="headerlink" title="脏读："></a>脏读：</h4><p>一个事务对数据进行了修改，这个修改对其他事务是可见的，在还没有提交这个事务时，其他事务来对这个数据等进行读取，此时前一个事务进行回滚操作，其他事务读取到的数据就是一个脏数据，这就是脏读。</p>
+<h4 id="修改丢失："><a href="#修改丢失：" class="headerlink" title="修改丢失："></a>修改丢失：</h4><p>在一个事务读取一个数据时，另一个事务也访问了该数据，那么在第一个事务中修改了这个数据后，第二个数据也修改了这个数据。这样第一个事务的修改就被丢失了，这就是修改丢失。</p>
+<h4 id="不可重复读："><a href="#不可重复读：" class="headerlink" title="不可重复读："></a>不可重复读：</h4><p>在一个事务中多次读取同一个数据时，另一个事务对该数据进行修改，那么在第一个事务多次进行读取该数据时，由于第二个事务的修改导致第一个事务读取到的数据不一样，这就发生了在一个事务内读取到不同的数据，这就是不可重复读。</p>
+<h4 id="幻读："><a href="#幻读：" class="headerlink" title="幻读："></a>幻读：</h4><p>在一个事务进行多次读取数据时，另一个事务此时插入了一些数据，导致第一个事务读取到了原本不存在的数据，这就是幻读。</p>
+<h4 id="不可重复读和幻读的区别？"><a href="#不可重复读和幻读的区别？" class="headerlink" title="不可重复读和幻读的区别？"></a>不可重复读和幻读的区别？</h4><ul>
+<li>不可重复读的重点是内容修改或者记录减少比如多次读取一条记录发现其中某些记录的值被修改；</li>
+<li>幻读的重点在于记录新增比如多次执行同一条查询语句（DQL）时，发现查到的记录增加了。</li>
+</ul>
+<p>举个例子：执行 <code>delete</code> 和 <code>update</code> 操作的时候，可以直接对记录加锁，保证事务安全。而执行 <code>insert</code> 操作的时候，由于记录锁（Record Lock）只能锁住已经存在的记录，为了避免插入新记录，需要依赖间隙锁（Gap Lock）。也就是说执行 <code>insert</code> 操作的时候需要依赖 Next-Key Lock（Record Lock+Gap Lock） 进行加锁来保证不出现幻读。</p>
+<h2 id="14-并发事务的控制方式有哪些？"><a href="#14-并发事务的控制方式有哪些？" class="headerlink" title="14.并发事务的控制方式有哪些？"></a>14.并发事务的控制方式有哪些？</h2><p>MySQL 中并发事务的控制方式无非就两种：<strong>锁</strong> 和 <strong>MVCC</strong>。锁可以看作是悲观控制的模式，多版本并发控制（MVCC，Multiversion concurrency control）可以看作是乐观控制的模式。</p>
+<p><strong>锁</strong> 控制方式下会通过加锁来显式控制共享资源而不是通过调度手段，MySQL 中主要是通过 <strong>读写锁</strong> 来实现并发控制。</p>
+<p><strong>共享锁：</strong>又称为读锁，事务在读取数据时，会获取共享锁。当事务获取共享锁后，其他事务仍然可以获取到该数据，但不能对其进行修改。</p>
+<p><strong>排他锁：</strong>又称为写锁或者独占锁，事务在修改数据时会获取排他锁。当事务获取了排他锁后，不允许其他事务对该数据进行任何读取或修改操作。</p>
+<p><strong>共享锁</strong>允许多个事务同时读取数据，但阻止其他事务对数据进行写操作。</p>
+<p><strong>排他锁</strong>阻止所有其他事务读取或写入数据，确保数据在修改时不会被其他事务干扰</p>
+<p>读写锁可以做到读读并行，但不能做到读写并行、写写并行。另外，根据锁粒度不同又分为表级锁和行级锁。InnoDB存储引擎既支持表级锁，也支持行级锁，并且InnoDB默认是行级锁。行级锁的锁粒度更小，仅对相关联的记录加锁，所以对于并发写入操作来说，InnoDB的性能更好。不论表级锁还是行级锁，都支持共享锁和排他锁。</p>
+<p><strong>MVCC</strong> 是多版本并发控制，即对一份数据存储多个不同版本，通过事务的可见性来保证事务可以看到自己应该看到的数据版本。<strong>会有一个全局的版本分配器来为每一行数据分配一个唯一的版本号。</strong></p>
+<p>MVCC 在 MySQL 中实现所依赖的手段主要是: <strong>隐藏字段、read view、undo log</strong>。</p>
+<ul>
+<li>undo log : undo log 用于记录某行数据的多个版本的数据。</li>
+<li>read view 和 隐藏字段 : 用来判断当前版本数据的可见性。</li>
+</ul>
+<h2 id="15-SQL标准定义了哪些隔离级别？"><a href="#15-SQL标准定义了哪些隔离级别？" class="headerlink" title="15.SQL标准定义了哪些隔离级别？"></a>15.SQL标准定义了哪些隔离级别？</h2><p>**READ-UNCOMMITTED(读取未提交)**：最低的隔离级别，允许读取到尚未提交的数据，可能会导致脏读、不可重复读和幻读的问题。</p>
+<p>**READ-COMMITTED(读取已提交)**：只能读取到事务已经提交的数据，解决了脏读的问题，但可能会有不可重复读和幻读的问题。</p>
+<p>**REPEATABLE-READ(可重复读)**：对同一数据的多次读取结果都是一致的，除非数据是被本身事务所修改的，解决了脏读和不可重复读的问题，但还有幻读的问题。</p>
+<p><strong>SERIALIZABLE(可串行化)</strong> ：最高的隔离级别，完全服从 ACID 的隔离级别。所有的事务依次逐个执行，这样事务之间就完全不可能产生干扰，也就是说，该级别可以防止脏读、不可重复读以及幻读。</p>
+<h2 id="16-MySQL-的隔离级别是基于锁实现的吗？"><a href="#16-MySQL-的隔离级别是基于锁实现的吗？" class="headerlink" title="16.MySQL 的隔离级别是基于锁实现的吗？"></a>16.MySQL 的隔离级别是基于锁实现的吗？</h2><p>MySQL 的隔离级别基于<strong>锁</strong>和 <strong>MVCC 机制</strong>共同实现的。</p>
+<p><strong>SERIALIZABLE</strong> 隔离级别是通过锁来实现的，<strong>READ-COMMITTED 和 REPEATABLE-READ 隔离级别</strong>是基于 <strong>MVCC</strong> 实现的。不过， <strong>SERIALIZABLE</strong> 之外的其他隔离级别可能也需要<strong>用到锁机制</strong>，就比如 <strong>REPEATABLE-READ</strong> 在当前读情况下需要使用加锁读来保证不会出现幻读。</p>
+<h2 id="17-Mysql的性能优化"><a href="#17-Mysql的性能优化" class="headerlink" title="17.Mysql的性能优化"></a>17.Mysql的性能优化</h2><h3 id="能用-MySQL-直接存储文件（比如图片）吗？"><a href="#能用-MySQL-直接存储文件（比如图片）吗？" class="headerlink" title="能用 MySQL 直接存储文件（比如图片）吗？"></a>能用 MySQL 直接存储文件（比如图片）吗？</h3><p>可以是可以，直接存储文件对应的二进制数据即可。不过，一般不会直接存储文件到数据库中，会严重影响数据库性能，消耗过多存储空间。</p>
+<p>可以选择使用云服务厂商提供的开箱即用的文件存储服务。<strong>数据库只存储文件地址信息，文件由文件存储服务负责存储。</strong></p>
+<h3 id="Mysql如何存储IP地址？"><a href="#Mysql如何存储IP地址？" class="headerlink" title="Mysql如何存储IP地址？"></a>Mysql如何存储IP地址？</h3><p>可以将 IP 地址转换成整形数据存储到数据库。</p>
+<p>MySQL 提供了两个方法来处理 ip 地址：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">INET_ATON()//把ip地址转换成整型数据(4~8位)</span><br><span class="line">INET_NTOA()//把整型数据转换成IP地址</span><br></pre></td></tr></table></figure>
+
+<p>插入数据前，先用 <code>INET_ATON()</code> 把 ip 地址转为整型，显示数据时，使用 <code>INET_NTOA()</code> 把整型的 ip 地址转为地址显示即可.</p>
+<h2 id="18-Mysql的三大日志："><a href="#18-Mysql的三大日志：" class="headerlink" title="18.Mysql的三大日志："></a>18.Mysql的三大日志：</h2><p>MySQL 日志主要包括错误日志、查询日志、慢查询日志、事务日志、二进制日志几大类。其中，比较重要的还要属<strong>二进制日志 binlog（归档日志）和事务日志 redo log（重做日志）和 undo log（回滚日志）</strong>。</p>
+<h3 id="redolog："><a href="#redolog：" class="headerlink" title="redolog："></a>redolog：</h3><p>redolog(重做日志)，是InnoDB存储引擎所特有的，它让MySQL拥有了崩溃恢复的能力。</p>
+<p>比如当Mysql宕机或挂了，重启时，InnoDB存储引擎会使用redolog恢复数据，保证数据的完整性与持久性。</p>
+<p><img src="/../images/image-20240829194357373.png" alt="image-20240829194357373"></p>
+<p>Mysql中的数据是以页为单位的，你查询一条记录，就会从硬盘里把一页数据加载出来，加载出来的数据叫做数据页，会被放入Buffer Pool里面。后续的查询都是先从Buffer Pool 中查找，如果没有命中缓存，再去加载硬盘查询，减少了硬盘I&#x2F;O的开销，提升性能。</p>
+<p>更新表数据的时候也是如此，发现Buffer Pool 里存在数据就直接在Buffer Pool 中更新，然后把”在某个数据页上做了什么修改” 记录到redolog重做日志缓存里去，接着会刷盘到redolog文件里。</p>
+<p>理想情况，事务一提交就会进行刷盘操作，但实际上，刷盘的时机是根据策略来进行的。</p>
+<p><img src="/../images/image-20240829194417617.png" alt="image-20240829194417617"></p>
+<h3 id="刷盘时机："><a href="#刷盘时机：" class="headerlink" title="刷盘时机："></a>刷盘时机：</h3><ol>
+<li>一般当事务提交的时候就会把缓存中的修改信息刷新到磁盘里。</li>
+<li>当redolog重做日志缓存容量不足时，就会把这些信息刷新到磁盘里。</li>
+<li>InnoDB 使用一个事务日志缓冲区（transaction log buffer）来暂时存储事务的重做日志条目。当缓冲区满时，会触发日志的刷新，将日志写入磁盘。</li>
+<li>InnoDB 定期会执行检查点操作，将内存中的已修改但尚未写入磁盘的数据刷新到磁盘上，并且会将相应的重做日志一同刷新，以确保数据的一致性。</li>
+<li>InnoDB 有一个一个后台线程，负责周期性（每隔 1 秒）地将脏页（已修改但尚未写入磁盘的数据页）刷新到磁盘，并将相关的重做日志一同刷新。</li>
+<li>MySQL 正常关闭的时候，redo log 都会刷入到磁盘里去。</li>
+</ol>
+<p><strong>总之，InnoDB 在多种情况下会刷新重做日志，以保证数据的持久性和一致性。</strong></p>
+<p>这里有个参数可以控制在事务提交后的刷盘策略，这个参数是</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">innodb_flush_log_at_trx_commit</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>默认值位1，表示每次事务提交都会进行刷盘操作，只要事务提交成功，redo log 记录就一定在磁盘里，不会有任何数据丢失。</li>
+<li>当innodb_flush_log_at_trx_commit的值位0时，表示每次事务提交都不会进行刷盘操作。</li>
+<li>值为2时，表示每次事务提交时都把数据写入page cache（文件系统缓存）里。page cache 是专门用来缓存文件的，这里被缓存的文件就是 redo log 文件。</li>
+</ol>
+<p>另外，InnoDB 存储引擎有一个<strong>后台线程</strong>，每隔<code>1</code> 秒，就会把 <code>redo log buffer</code> 中的内容写到文件系统缓存（<code>page cache</code>），然后调用 <strong><code>fsync</code></strong> 刷盘。</p>
+<p><img src="/../images/image-20240829194434815.png" alt="image-20240829194434815"></p>
+<p><strong>一个没有提交事务的 redo log 记录，也可能会刷盘。</strong></p>
+<p>因为在事务执行过程 redo log 记录是会写入<code>redo log buffer</code> 中，这些 redo log 记录会被后台线程刷盘。</p>
+<p><img src="/../images/image-20240829194449196.png" alt="image-20240829194449196"></p>
+<p>除了后台线程每秒<code>1</code>次的轮询操作，还有一种情况，当 <code>redo log buffer</code> 占用的空间不足时，后台线程也会主动刷盘。</p>
+<h4 id="日志文件组："><a href="#日志文件组：" class="headerlink" title="日志文件组："></a>日志文件组：</h4><p>硬盘上存储的 redo log 日志文件不只一个，而是以一个<strong>日志文件组</strong>的形式出现的，每个<code>redo</code>日志文件大小都是一样的。</p>
+<p>这个日志文件组采用的是环形数组形式，从头开始写，写到末尾又回到头循环写，如下图所示。</p>
+<img src="../images/image-20240829194506541.png" alt="image-20240829194506541" style="zoom: 50%;" />
+
+<p>在这个<strong>日志文件组</strong>中还有两个重要的属性分别是 <code>write pos、checkpoint</code>，分别表示当前记录的位置和当前要擦除的位置，每次更新，都会往后移。</p>
+<p><code>write pos</code> 和 <code>checkpoint</code> 之间的还空着的部分可以用来写入新的 redo log 记录。</p>
+<img src="../images/image-20240829194530230.png" alt="image-20240829194530230" style="zoom:50%;" />
+
+<p>如果 <code>write pos</code> 追上 <code>checkpoint</code> ，表示<strong>日志文件组</strong>满了，这时候不能再写入新的 redo log 记录，MySQL 得停下来，清空一些记录，把 <code>checkpoint</code> 推进一下。</p>
+<img src="../images/image-20240829194554229.png" alt="image-20240829194554229" style="zoom:50%;" />
+
+<p>在 MySQL 8.0.30 之前可以通过 <code>innodb_log_files_in_group</code> 和 <code>innodb_log_file_size</code> 配置日志文件组的文件数和文件大小，但在 MySQL 8.0.30 及之后的版本中，这两个变量已被废弃，即使被指定也是用来计算 <code>innodb_redo_log_capacity</code> 的值。而日志文件组的文件数则固定为 32，文件大小则为 <code>innodb_redo_log_capacity / 32</code> 。</p>
+<h3 id="binlog："><a href="#binlog：" class="headerlink" title="binlog："></a>binlog：</h3><p>redo log 它是物理日志，记录内容是“在某个数据页上做了什么修改”，属于 InnoDB 存储引擎。</p>
+<p>而 binlog 是逻辑日志，记录内容是语句的原始逻辑，类似于“给 ID&#x3D;2 这一行的 c 字段加 1”，属于<code>MySQL Server</code> 层。</p>
+<p>不管用什么存储引擎，只要发生了表数据更新，都会产生 binlog 日志。</p>
+<p>可以说 MySQL 数据库的<strong>数据备份、主备、主主、主从</strong>都离不开 binlog，需要依靠 binlog 来同步数据，保证数据一致性。</p>
+<p>binlog 会记录所有涉及<strong>更新数据的逻辑操作</strong>，并且是<strong>顺序写</strong>。</p>
+<h4 id="记录格式："><a href="#记录格式：" class="headerlink" title="记录格式："></a>记录格式：</h4><p>binlog 日志有三种格式，可以通过<code>binlog_format</code>参数指定。</p>
+<p>有三个值：</p>
+<ul>
+<li><p><strong>statement</strong>：指定statement，记录的是sql语句的原文，比如执行一条<code>update T set update_time=now() where id=1</code>，记录的内容如下。</p>
+<p><img src="/../images/image-20240829194611246.png" alt="image-20240829194611246"></p>
+<p>同步数据时，会执行记录的<code>SQL</code>语句，但是有个问题，<code>update_time=now()</code>这里会获取当前系统时间，直接执行会导致与原库的数据不一致。</p>
+</li>
+<li><p><strong>row</strong>：为了解决这种问题，我们需要指定为<code>row</code>，记录的内容不再是简单的<code>SQL</code>语句了，还包含操作的具体数据，记录内容如下。</p>
+</li>
+</ul>
+<p><img src="/../images/image-20240829194634487.png" alt="image-20240829194634487"></p>
+<p><code>row</code>格式记录的内容看不到详细信息，要通过<code>mysqlbinlog</code>工具解析出来。</p>
+<p><code>update_time=now()</code>变成了具体的时间<code>update_time=1627112756247</code>，条件后面的@1、@2、@3 都是该行数据第 1 个~3 个字段的原始值（<strong>假设这张表只有 3 个字段</strong>）。</p>
+<p>这样就能保证同步数据的一致性，通常情况下都是指定为<code>row</code>，这样可以为数据库的恢复与同步带来更好的可靠性。但是这种格式，需要更大的容量来记录，比较占用空间，恢复与同步时会更消耗 IO 资源，影响执行速度。</p>
+<ul>
+<li><strong>mixed</strong>：所以就有了一种折中的方案，指定为<code>mixed</code>，记录的内容是前两者的混合。MySQL 会判断这条<code>SQL</code>语句是否可能引起数据不一致，如果是，就用<code>row</code>格式，否则就用<code>statement</code>格式</li>
+</ul>
+<h4 id="写入机制："><a href="#写入机制：" class="headerlink" title="写入机制："></a>写入机制：</h4><p>事务执行过程中，会把日志写入binlog cache，事务提交的时候，把binglog cache的内容写到binglog中。因为一个事务的 binlog 不能被拆开，无论这个事务多大，也要确保一次性写入，所以系统会给每个线程分配一个块内存作为<code>binlog cache</code>。</p>
+<p>我们可以通过这个参数binlog_cache_size来控制每个binlog cache的大小，如果超出了这个的大小，就要暂存到磁盘上了。</p>
+<p>binlog 日志刷盘流程如下</p>
+<p><img src="/../images/image-20240829194651620.png" alt="image-20240829194651620"></p>
+<ul>
+<li><strong>上图的 write，是指把日志写入到文件系统的 page cache，并没有把数据持久化到磁盘，所以速度比较快</strong></li>
+<li><strong>上图的 fsync，才是将数据持久化到磁盘的操作</strong></li>
+</ul>
+<p><code>write</code>和<code>fsync</code>的时机，可以由参数<code>sync_binlog</code>控制，默认是<code>1</code>。</p>
+<p>为<code>0</code>的时候，表示每次提交事务都只<code>write</code>，由系统自行判断什么时候执行<code>fsync</code>。</p>
+<p><img src="/../images/image-20240829194707449.png" alt="image-20240829194707449"></p>
+<p>虽然性能得到提升，但是机器宕机，<code>page cache</code>里面的 binlog 会丢失。</p>
+<p>为了安全起见，可以设置为<code>1</code>，表示每次提交事务都会执行<code>fsync</code>，就如同 <strong>redo log 日志刷盘流程</strong> 一样。</p>
+<p>最后还有一种折中方式，可以设置为<code>N(N&gt;1)</code>，表示每次提交事务都<code>write</code>，但累积<code>N</code>个事务后才<code>fsync</code>。</p>
+<p><img src="/../images/image-20240829194724782.png" alt="image-20240829194724782"></p>
+<p>在出现 IO 瓶颈的场景里，将<code>sync_binlog</code>设置成一个比较大的值，可以提升性能。</p>
+<p>同样的，如果机器宕机，会丢失最近<code>N</code>个事务的 binlog 日志。</p>
+<h4 id="两阶段提交"><a href="#两阶段提交" class="headerlink" title="两阶段提交"></a><a target="_blank" rel="noopener" href="https://javaguide.cn/database/mysql/mysql-logs.html#%E4%B8%A4%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BA%A4">两阶段提交</a></h4><h3 id="undoolog："><a href="#undoolog：" class="headerlink" title="undoolog："></a>undoolog：</h3><p>每一个事务对数据的修改都会记录到undolog日志中，当执行事务过程中发生错误或需要回滚时，Mysql可以根据undolog日志进行恢复数据到事务执行前的状态。</p>
+<p>undolog是一种逻辑日志，记录的是sql语句，比如事务执行一条delete语句，undolog会相对应的记录一条insert语句。同时undolog日志的信息也要被记录到redolog日志中。并且，undo-log 本身是会被删除清理的，例如 INSERT 操作，在事务提交之后就可以清除掉了；UPDATE&#x2F;DELETE 操作在事务提交不会立即删除，会加入 history list，由后台线程 purge 进行清理。</p>
+<p>undo log 是采用 segment（段）的方式来记录的，每个 undo 操作在记录的时候占用一个 <strong>undo log segment</strong>（undo 日志段），undo log segment 包含在 <strong>rollback segment</strong>（回滚段）中。事务开始时，需要为其分配一个 rollback segment。每个 rollback segment 有 1024 个 undo log segment，这有助于管理多个并发事务的回滚需求。</p>
+<p>通常情况下， <strong>rollback segment header</strong>（通常在回滚段的第一个页）负责管理 rollback segment。rollback segment header 是 rollback segment 的一部分，通常在回滚段的第一个页。<strong>history list</strong> 是 rollback segment header 的一部分，它的主要作用是记录所有已经提交但还没有被清理（purge）的事务的 undo log。这个列表使得 purge 线程能够找到并清理那些不再需要的 undo log 记录。</p>
+<p>另外，<code>MVCC</code> 的实现依赖于：<strong>隐藏字段、Read View、undo log</strong>。在内部实现中，InnoDB 通过数据行的 <code>DB_TRX_ID</code> 和 <code>Read View</code> 来判断数据的可见性，如不可见，则通过数据行的 <code>DB_ROLL_PTR</code> 找到 undo log 中的历史版本。每个事务读到的数据版本可能是不一样的，在同一个事务中，用户只能看到该事务创建 <code>Read View</code> 之前已经提交的修改和该事务本身做的修改</p>
+<h3 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h3><p>MySQL InnoDB 引擎使用 <strong>redo log(重做日志)</strong> 保证事务的<strong>持久性</strong>，使用 <strong>undo log(回滚日志)</strong> 来保证事务的<strong>原子性</strong>。</p>
+<p>MySQL 数据库的<strong>数据备份、主备、主主、主从</strong>都离不开 binlog，需要依靠 binlog 来同步数据，保证数据一致性。</p>
+</article><!-- lincense--><div class="license-wrapper"><p> <span>Author:  </span><a href="http://example.com">WANG</a></p><p> <span>Link:  </span><a href="http://example.com/2024/08/29/Mysql%E6%95%B0%E6%8D%AE%E5%BA%93/">http://example.com/2024/08/29/Mysql%E6%95%B0%E6%8D%AE%E5%BA%93/</a></p><p> <span>Copyright:  </span><span>All articles in this blog are licensed under <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/3.0">CC BY-NC-SA 3.0</a> unless stating additionally.</span></p></div><div class="post-paginator"><a class="prevSlogan" href="/2024/08/29/Redis/" title="Redis"><span>< PreviousPost</span><br><span class="prevTitle">Redis</span></a><a class="nextSlogan" href="/2024/08/29/Kafka/" title="Kafka"><span>NextPost ></span><br><span class="nextTitle">Kafka</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%A4%96%E9%94%AE%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">1.</span> <span class="toc-text">1.外键是什么？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E4%B8%BA%E4%BB%80%E4%B9%88%E6%9C%89%E7%9A%84%E5%85%AC%E5%8F%B8%E4%BC%9A%E7%A6%81%E6%AD%A2%E4%BD%BF%E7%94%A8%E5%A4%96%E9%94%AE%EF%BC%9F"><span class="toc-number">2.</span> <span class="toc-text">2.为什么有的公司会禁止使用外键？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E4%BB%80%E4%B9%88%E6%98%AF%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B"><span class="toc-number">3.</span> <span class="toc-text">3.什么是存储过程?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-drop%E3%80%81delete-%E4%B8%8E-truncate-%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="toc-number">4.</span> <span class="toc-text">4.drop、delete 与 truncate 区别？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E6%95%B4%E6%95%B0%E7%B1%BB%E5%9E%8B%E7%9A%84-UNSIGNED-%E5%B1%9E%E6%80%A7%E6%9C%89%E4%BB%80%E4%B9%88%E7%94%A8%EF%BC%9F"><span class="toc-number">5.</span> <span class="toc-text">5.整数类型的 UNSIGNED 属性有什么用？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-CHAR%E5%92%8CVARCHAR%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="toc-number">6.</span> <span class="toc-text">6.CHAR和VARCHAR的区别？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-DECIMAL%E5%92%8CFLOAT-DOUBLE%E7%9A%84%E5%8C%BA%E5%88%AB%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">7.</span> <span class="toc-text">7.DECIMAL和FLOAT&#x2F;DOUBLE的区别是什么？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-%E4%B8%BA%E4%BB%80%E4%B9%88-MySQL-%E4%B8%8D%E5%BB%BA%E8%AE%AE%E4%BD%BF%E7%94%A8-NULL-%E4%BD%9C%E4%B8%BA%E5%88%97%E9%BB%98%E8%AE%A4%E5%80%BC"><span class="toc-number">8.</span> <span class="toc-text">8.为什么 MySQL 不建议使用 NULL 作为列默认值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-MyISAM%E5%92%8CInnoDB%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="toc-number">9.</span> <span class="toc-text">9.MyISAM和InnoDB有什么区别？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10-%E7%B4%A2%E5%BC%95%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">10.</span> <span class="toc-text">10.索引是什么?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#11-%E7%B4%A2%E5%BC%95%E5%BA%95%E5%B1%82%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E9%80%89%E5%9E%8B"><span class="toc-number">11.</span> <span class="toc-text">11.索引底层数据结构选型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Hash-%E8%A1%A8"><span class="toc-number">11.1.</span> <span class="toc-text">Hash 表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E5%8F%89%E6%9F%A5%E6%89%BE%E6%A0%91-BST"><span class="toc-number">11.2.</span> <span class="toc-text">二叉查找树(BST)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AVL%E6%A0%91-%E4%BA%8C%E5%8F%89%E5%B9%B3%E8%A1%A1%E6%A0%91"><span class="toc-number">11.3.</span> <span class="toc-text">AVL树(二叉平衡树)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BA%A2%E9%BB%91%E6%A0%91"><span class="toc-number">11.4.</span> <span class="toc-text">红黑树()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#B%E6%A0%91%E5%92%8CB-%E6%A0%91"><span class="toc-number">11.5.</span> <span class="toc-text">B树和B+树</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#12-%E7%B4%A2%E5%BC%95%E7%B1%BB%E5%9E%8B"><span class="toc-number">12.</span> <span class="toc-text">12.索引类型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%9B%9E%E8%A1%A8%EF%BC%9F"><span class="toc-number">12.1.</span> <span class="toc-text">什么是回表？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%81%94%E5%90%88%E7%B4%A2%E5%BC%95%EF%BC%9A%E5%A4%9A%E4%B8%AA%E5%AD%97%E6%AE%B5%E4%B8%80%E8%B5%B7%E7%BB%84%E6%88%90%E7%9A%84%E7%B4%A2%E5%BC%95"><span class="toc-number">12.2.</span> <span class="toc-text">联合索引：多个字段一起组成的索引</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%80%E5%B7%A6%E5%8C%B9%E9%85%8D%E5%8E%9F%E5%88%99"><span class="toc-number">12.3.</span> <span class="toc-text">最左匹配原则</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#13-%E4%BD%95%E4%B8%BA%E4%BA%8B%E5%8A%A1%EF%BC%9F"><span class="toc-number">13.</span> <span class="toc-text">13.何为事务？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%95%E4%B8%BA%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1%EF%BC%9F"><span class="toc-number">13.1.</span> <span class="toc-text">何为数据库事务？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B9%B6%E5%8F%91%E4%BA%8B%E5%8A%A1%E5%B8%A6%E6%9D%A5%E4%BA%86%E5%93%AA%E4%BA%9B%E9%97%AE%E9%A2%98%EF%BC%9F"><span class="toc-number">13.2.</span> <span class="toc-text">并发事务带来了哪些问题？</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%84%8F%E8%AF%BB%EF%BC%9A"><span class="toc-number">13.2.1.</span> <span class="toc-text">脏读：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E4%B8%A2%E5%A4%B1%EF%BC%9A"><span class="toc-number">13.2.2.</span> <span class="toc-text">修改丢失：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%8D%E5%8F%AF%E9%87%8D%E5%A4%8D%E8%AF%BB%EF%BC%9A"><span class="toc-number">13.2.3.</span> <span class="toc-text">不可重复读：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B9%BB%E8%AF%BB%EF%BC%9A"><span class="toc-number">13.2.4.</span> <span class="toc-text">幻读：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%8D%E5%8F%AF%E9%87%8D%E5%A4%8D%E8%AF%BB%E5%92%8C%E5%B9%BB%E8%AF%BB%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="toc-number">13.2.5.</span> <span class="toc-text">不可重复读和幻读的区别？</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#14-%E5%B9%B6%E5%8F%91%E4%BA%8B%E5%8A%A1%E7%9A%84%E6%8E%A7%E5%88%B6%E6%96%B9%E5%BC%8F%E6%9C%89%E5%93%AA%E4%BA%9B%EF%BC%9F"><span class="toc-number">14.</span> <span class="toc-text">14.并发事务的控制方式有哪些？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#15-SQL%E6%A0%87%E5%87%86%E5%AE%9A%E4%B9%89%E4%BA%86%E5%93%AA%E4%BA%9B%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB%EF%BC%9F"><span class="toc-number">15.</span> <span class="toc-text">15.SQL标准定义了哪些隔离级别？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#16-MySQL-%E7%9A%84%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB%E6%98%AF%E5%9F%BA%E4%BA%8E%E9%94%81%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%90%97%EF%BC%9F"><span class="toc-number">16.</span> <span class="toc-text">16.MySQL 的隔离级别是基于锁实现的吗？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#17-Mysql%E7%9A%84%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="toc-number">17.</span> <span class="toc-text">17.Mysql的性能优化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%83%BD%E7%94%A8-MySQL-%E7%9B%B4%E6%8E%A5%E5%AD%98%E5%82%A8%E6%96%87%E4%BB%B6%EF%BC%88%E6%AF%94%E5%A6%82%E5%9B%BE%E7%89%87%EF%BC%89%E5%90%97%EF%BC%9F"><span class="toc-number">17.1.</span> <span class="toc-text">能用 MySQL 直接存储文件（比如图片）吗？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Mysql%E5%A6%82%E4%BD%95%E5%AD%98%E5%82%A8IP%E5%9C%B0%E5%9D%80%EF%BC%9F"><span class="toc-number">17.2.</span> <span class="toc-text">Mysql如何存储IP地址？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#18-Mysql%E7%9A%84%E4%B8%89%E5%A4%A7%E6%97%A5%E5%BF%97%EF%BC%9A"><span class="toc-number">18.</span> <span class="toc-text">18.Mysql的三大日志：</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#redolog%EF%BC%9A"><span class="toc-number">18.1.</span> <span class="toc-text">redolog：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%B7%E7%9B%98%E6%97%B6%E6%9C%BA%EF%BC%9A"><span class="toc-number">18.2.</span> <span class="toc-text">刷盘时机：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%97%A5%E5%BF%97%E6%96%87%E4%BB%B6%E7%BB%84%EF%BC%9A"><span class="toc-number">18.2.1.</span> <span class="toc-text">日志文件组：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#binlog%EF%BC%9A"><span class="toc-number">18.3.</span> <span class="toc-text">binlog：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%B0%E5%BD%95%E6%A0%BC%E5%BC%8F%EF%BC%9A"><span class="toc-number">18.3.1.</span> <span class="toc-text">记录格式：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%86%99%E5%85%A5%E6%9C%BA%E5%88%B6%EF%BC%9A"><span class="toc-number">18.3.2.</span> <span class="toc-text">写入机制：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%A4%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BA%A4"><span class="toc-number">18.3.3.</span> <span class="toc-text">两阶段提交</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undoolog%EF%BC%9A"><span class="toc-number">18.4.</span> <span class="toc-text">undoolog：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93%EF%BC%9A"><span class="toc-number">18.5.</span> <span class="toc-text">总结：</span></a></li></ol></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

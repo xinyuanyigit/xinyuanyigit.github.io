@@ -98,9 +98,62 @@
 }( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="WANG's Blog" type="application/atom+xml">
 </head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
   i.fa.fa-comment
-  .saying--><div class="cxo-profile-inner"><div class="profile-name">wangkehua</div><div class="profile-signature">for me</div><div class="friends"><div>FRIENDS</div><span><a href="//github.com/Longlongyu" target="_black">friendA</a></span><span><a href="//github.com/" target="_black">friendB</a></span><span><a href="//github.com/" target="_black">friendC</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">Mr.Wang's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1>Mr.Wang's Blog</h1><h5>Welcome to my Blog!</h5><div class="intro-social"><a class="fa fa-github" href="https://github.com/xinyuanyigit" target="_blank" title="github"></a><a class="fa fa-weibo" href="//www.weibo.com" target="_blank" title="weibo"></a><a class="fa fa-facebook" href="//www.facebook.com" target="_blank" title="facebook"></a><a class="fa fa-twitter" href="//twitter.com" target="_blank" title="twitter"></a><a class="fa fa-rss" href="/atom.xml" target="_blank" title="rss"></a></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><section id="recent-posts"><div class="recent-post-item"><div class="post-title"><a href="/2024/08/29/hhh/">hhh</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2024-08-29T10:54:15.000Z">2024-08-29</time></div><div class="recent-post-content">
-</div><div class="read-more"><a class="more" href="/2024/08/29/hhh/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2024/08/29/hello-world/">Hello World</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2024-08-29T10:22:30.835Z">2024-08-29</time></div><div class="recent-post-content">Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.
-Quick StartCreate a new post1$ hexo new &quot;My New Post&quot;
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">wangkehua</div><div class="profile-signature">for me</div><div class="friends"><div>FRIENDS</div><span><a href="//github.com/Longlongyu" target="_black">friendA</a></span><span><a href="//github.com/" target="_black">friendB</a></span><span><a href="//github.com/" target="_black">friendC</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">Mr.Wang's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1>Mr.Wang's Blog</h1><h5>Welcome to my Blog!</h5><div class="intro-social"><a class="fa fa-github" href="https://github.com/xinyuanyigit" target="_blank" title="github"></a><a class="fa fa-weibo" href="//www.weibo.com" target="_blank" title="weibo"></a><a class="fa fa-facebook" href="//www.facebook.com" target="_blank" title="facebook"></a><a class="fa fa-twitter" href="//twitter.com" target="_blank" title="twitter"></a><a class="fa fa-rss" href="/atom.xml" target="_blank" title="rss"></a></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><section id="recent-posts"><div class="recent-post-item"><div class="post-title"><a href="/2024/08/29/%E9%A1%B9%E7%9B%AE%E9%97%AE%E9%A2%98/">项目问题</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2024-08-29T11:23:54.067Z">2024-08-29</time></div><div class="recent-post-content">扫码登录的设计与实现用户名密码登录：在登录页面输入用户名和密码，服务端验证用户名和密码，验证失败返回登录页重新登录，验证成功生成token，存储token到redis中，返回token给前端。之后每次请求都会携带该token，验证该token，验证通过，执行后续接口，返回执行结果。验证失败，返回登录页重新登录。
+二维码扫码登录：二维码是PC端、手机端和服务端之间的桥梁。
+流程：
 
-More info: Writing
-Run server1$ hexo ser ...</div><div class="read-more"><a class="more" href="/2024/08/29/hello-world/#more">ReadMore</a></div><hr></div></section><nav class="cxo-page-nav"><span class="page-number current">1</span></nav></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>
+登录页发送请求到服务端，服务端会生成一个唯一ID，并把这个唯一ID设置到redis中，设置它的过期时间。服务端返回这个唯一ID到PC端，PC端会根据这个唯一ID生成一个二维码。在这个步骤里，在redis中存储的是一个 ...</div><div class="read-more"><a class="more" href="/2024/08/29/%E9%A1%B9%E7%9B%AE%E9%97%AE%E9%A2%98/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2024/08/29/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2024-08-29T11:23:54.065Z">2024-08-29</time></div><div class="recent-post-content"></div><div class="read-more"><a class="more" href="/2024/08/29/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2024/08/29/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2024-08-29T11:23:54.063Z">2024-08-29</time></div><div class="recent-post-content">分布式锁解决了什么问题？分布式锁是一种在分布式系统中用于协调多个节点间对共享资源访问的技术。它解决了以下几种问题：
+
+资源竞争:
+在分布式系统中，多个节点可能需要同时访问同一份共享资源（如数据库、文件系统或其他服务）。如果没有适当的协调机制，这些节点可能会同时修改资源，导致数据不一致或丢失。
+
+
+一致性问题:
+在分布式环境中，多个节点上的操作需要保持一致性。例如，当多个节点尝试同时更新同一个数据库记录时，需要确保只有一个节点成功更新，以避免数据冲突。
+
+
+并发控制:
+分布式锁可以帮助控制并发操作，确保在特定时间段内只有一个节点能够访问或修改共享资源。这对于需要原子性的操作尤其重要，例如事务处理 ...</div><div class="read-more"><a class="more" href="/2024/08/29/%E5%88%86%E5%B8%83%E5%BC%8F/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2024/08/29/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2024-08-29T11:23:54.062Z">2024-08-29</time></div><div class="recent-post-content">Future类介绍Future是异步思想的典型应用，主要用在一些需要执行耗时操作任务的场景，避免线程一直在原地等待耗时任务，导致效率低效。具体流程如下：
+当我们在执行某一个耗时任务时，可以将这个耗时任务交给一个子线程去异步执行，同时我们可以进行其他逻辑，不用等待耗时操作的执行完成。等到其他的逻辑执行完成后，可以通过Future类获耗时任务的执行结果。这样一来，执行效率就得到明显提高。核心思想就是异步调用。
+Future接口有5个方法：
+CompletionStage介绍CompletionStage 接口描述了一个异步计算的阶段。很多计算可以分成多个阶段或步骤，此时可以通过它将所有步骤组合起来 ...</div><div class="read-more"><a class="more" href="/2024/08/29/%E5%A4%9A%E7%BA%BF%E7%A8%8B/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2024/08/29/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/">并发编程</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2024-08-29T11:23:54.060Z">2024-08-29</time></div><div class="recent-post-content">指令重排：为了提升执行速度和性能，计算机在执行程序代码的时候，会对指令进行重排序。
+指令重排序简单来说就是系统在执行代码的时候并不是按照你写代码的顺序依次顺序执行的。
+常见的指令重排有以下两种情况：
+编译器优化重排：编译器在不改变单线程程序语义的前提下，重新安排语句的执行顺序。
+指令并行重排：现代处理器采用指令级并行技术来将多条指令重叠执行。如果不存在数据依赖性，处理器可以改变语句对应机器指令的执行顺序。
+另外，内存系统也会有“重排序”，但又不是真正意义上的重排序。在 JMM 里表现为主存和本地内存的内容可能不一致，进而导致程序在多线程下执行可能出现问题。
+Java 源代码会经历 编译器优化重 ...</div><div class="read-more"><a class="more" href="/2024/08/29/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2024/08/29/xxl-job/">xxl-job</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2024-08-29T11:23:54.059Z">2024-08-29</time></div><div class="recent-post-content">xxl-job的定时功能底层是怎么实现？XXL-Job 的定时功能底层实现了基于时间轮的调度模型，使用了调度中心和执行器组件来管理任务的调度和执行，并采用了分布式锁和故障恢复机制来保证任务执行的一致性和可靠性。
+</div><div class="read-more"><a class="more" href="/2024/08/29/xxl-job/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2024/08/29/ThreadLocal/">ThreadLocal</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2024-08-29T11:23:54.056Z">2024-08-29</time></div><div class="recent-post-content">什么是弱引用？弱引用是Java中4大引用之一，是一种较为特殊且轻量级的引用类型。弱引用设计的目的是允许垃圾回收器在内存压力过大时，回收弱引用指向的对象，即使该对象仍然被弱引用所引用。
+弱引用的特点：
+
+弱引用指向的对象的生命周期比软引用短，比虚引用长。
+当垃圾回收器运行时，即使内存充足，被弱引用指向的对象仍然会被回收。
+一旦被弱引用指向的对象被垃圾回收器回收，该弱引用就会自动被清空，变为 null。
+
+弱引用的用途：
+
+缓存：弱引用常用于实现缓存机制，特别是当希望在内存紧张时能够自动释放缓存时。
+避免内存泄漏：使用弱引用可以帮助避免因循环引用等引起的内存泄漏问题。
+
+ThreadLocal的原 ...</div><div class="read-more"><a class="more" href="/2024/08/29/ThreadLocal/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2024/08/29/Redis/">Redis</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2024-08-29T11:23:54.054Z">2024-08-29</time></div><div class="recent-post-content">redis为什么这么快？
+Redis 基于内存，内存的访问速度比磁盘快很多；
+Redis 开发了一套高效的事件处理模型，主要是单线程事件循环和 IO 多路复用
+redis拥有高效的数据结构
+
+为什么要用redis？访问速度更快
+redis是一个纯内存操作，它将所有的数据都存储在内存中，而内存的访问速度远远高于磁盘存储。
+高并发
+因为Redis的所有的数据都存储在内存中，所以它的qps比Mysql这类的数据库的qps高得多。我们可以考虑把数据库中的部分数据转移到缓存中去，这样用户的一部分请求会直接到缓存这里而不用经过数据库。进而提高系统的整体并发性。
+功能全面
+Redis 除了可以用作缓存之外， ...</div><div class="read-more"><a class="more" href="/2024/08/29/Redis/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2024/08/29/Mysql%E6%95%B0%E6%8D%AE%E5%BA%93/">Mysql数据库</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2024-08-29T11:23:54.053Z">2024-08-29</time></div><div class="recent-post-content">1.外键是什么？外键是一种用来与其他表建立联系的字段的名称，它是另一张表的主键，外键可以重复，可以有空值。并且一张表里可以有多个外键。
+2.为什么有的公司会禁止使用外键？
+外键更适用于单机系统和低并发场景，不适合在分布式、高并发场景使用。
+外键约束会导致级联更新或删除，级联更新可能会影响到其他表中的数据，造成数据不一致的问题。
+在分布式系统中，在多个数据源中进行外键约束会难以实现。
+在高并发场景下，外键约束会造成额外的系统消耗，因为在进行数据的插入和删除时，数据库会检查引用的完整性。
+一般会在应用层进行逻辑控制。
+
+3.什么是存储过程?我也没用过存储过程，我只知道它的一些概念和用法。
+存储过程 ...</div><div class="read-more"><a class="more" href="/2024/08/29/Mysql%E6%95%B0%E6%8D%AE%E5%BA%93/#more">ReadMore</a></div><hr></div><div class="recent-post-item"><div class="post-title"><a href="/2024/08/29/Kafka/">Kafka</a></div><div class="post-time"><i class="fa fa-table"></i><time datetime="2024-08-29T11:23:54.051Z">2024-08-29</time></div><div class="recent-post-content">Kafka集群架构：
+
+</div><div class="read-more"><a class="more" href="/2024/08/29/Kafka/#more">ReadMore</a></div><hr></div></section><nav class="cxo-page-nav"><span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">NEXT &#62;</a></nav></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

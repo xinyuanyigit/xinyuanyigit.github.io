@@ -1,0 +1,418 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="WANG"><meta name="renderer" content="webkit"><meta name="copyright" content="WANG"><meta name="keywords" content="WANG's Blog"><meta name="description" content=""><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>Redis · Mr.Wang's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="WANG's Blog" type="application/atom+xml">
+</head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">wangkehua</div><div class="profile-signature">for me</div><div class="friends"><div>FRIENDS</div><span><a href="//github.com/Longlongyu" target="_black">friendA</a></span><span><a href="//github.com/" target="_black">friendB</a></span><span><a href="//github.com/" target="_black">friendC</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">Mr.Wang's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">Redis</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>2024-08-29</span></span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><h2 id="redis为什么这么快？"><a href="#redis为什么这么快？" class="headerlink" title="redis为什么这么快？"></a>redis为什么这么快？</h2><ol>
+<li>Redis 基于内存，内存的访问速度比磁盘快很多；</li>
+<li>Redis 开发了一套高效的事件处理模型，主要是单线程事件循环和 IO 多路复用</li>
+<li>redis拥有高效的数据结构</li>
+</ol>
+<h2 id="为什么要用redis？"><a href="#为什么要用redis？" class="headerlink" title="为什么要用redis？"></a>为什么要用redis？</h2><p><strong>访问速度更快</strong></p>
+<p>redis是一个纯内存操作，它将所有的数据都存储在内存中，而内存的访问速度远远高于磁盘存储。</p>
+<p><strong>高并发</strong></p>
+<p>因为Redis的所有的数据都存储在内存中，所以它的qps比Mysql这类的数据库的qps高得多。我们可以考虑把数据库中的部分数据转移到缓存中去，这样用户的一部分请求会直接到缓存这里而不用经过数据库。进而提高系统的整体并发性。</p>
+<p><strong>功能全面</strong></p>
+<p>Redis 除了可以用作缓存之外，还可以用于分布式锁、限流、消息队列等等场景，功能强大！</p>
+<p>1.可以提高系统性能，减少延迟。<br>2.减轻数据库压力。<br>3.提高并发处理能力。<br>4.分布式系统支持，可以提供跨多个系统的的数据共享。<br>5.拥有灵活的缓存策略。</p>
+<h2 id="三种常见的缓存读写策略"><a href="#三种常见的缓存读写策略" class="headerlink" title="三种常见的缓存读写策略"></a>三种常见的缓存读写策略</h2><h3 id="1-Cache-Aside-Pattern-旁路缓存策略"><a href="#1-Cache-Aside-Pattern-旁路缓存策略" class="headerlink" title="1.Cache Aside Pattern(旁路缓存策略)"></a>1.Cache Aside Pattern(旁路缓存策略)</h3><p>旁路缓存模式比较适合读请求比较多的场景，这种缓存策略需要服务端同时维护缓存和数据库，并且是以数据库的数据为准。这种策略的缓存读写步骤分别为：</p>
+<p><strong>写：</strong>1.先更新数据库 2.数据库更新成功，再直接删除缓存<img src="../images/image-20240829194753712.png" alt="image-20240829194753712" style="zoom:80%;" /></p>
+<p><strong>读：</strong>1.从缓存中读取数据 2.如果缓存中不存在，从数据库中读取 3.数据库中拿到数据后，先更新缓存中的数据，再返回数据<img src="/../images/image-20240829194812099.png" alt="image-20240829194812099"></p>
+<h4 id="为什么删除cache，而不是更新cache？"><a href="#为什么删除cache，而不是更新cache？" class="headerlink" title="为什么删除cache，而不是更新cache？"></a>为什么删除cache，而不是更新cache？</h4><p>会对服务端的资源造成浪费，更新cache的话一般要经过一些计算得到，如果要频繁更新数据库里的数据的话，就要频繁更新cache中的数据，而cache中的数据可能都没被访问过就要更新，会造成大量的资源浪费。直接删除cache的话，一般不需要进行计算，直接删除即可。</p>
+<h4 id="在写数据的过程中，可以先删除-cache-，后更新-db-么？"><a href="#在写数据的过程中，可以先删除-cache-，后更新-db-么？" class="headerlink" title="在写数据的过程中，可以先删除 cache ，后更新 db 么？"></a><strong>在写数据的过程中，可以先删除 cache ，后更新 db 么？</strong></h4><p>不行，因为这样可能会造成数据库与缓存中的数据不一致问题。</p>
+<p>比如，请求1删除了缓存，但还没更新数据库中数据，此时请求2来了，因为缓存中没有数据，直接从数据库查询得到数据，这个数据就是旧的数据。</p>
+<h4 id="在写数据的过程中，先更新-db，后删除-cache-就可以了吗？"><a href="#在写数据的过程中，先更新-db，后删除-cache-就可以了吗？" class="headerlink" title="在写数据的过程中，先更新 db，后删除 cache 就可以了吗？"></a>在写数据的过程中，先更新 db，后删除 cache 就可以了吗？</h4><p>理论来说，还是会造成缓存不一致的问题，但操作缓存的速度比操作数据库的速度快很多，出现不一致的概率就很小了。</p>
+<h4 id="这种策略有什么缺点？"><a href="#这种策略有什么缺点？" class="headerlink" title="这种策略有什么缺点？"></a>这种策略有什么缺点？</h4><p>这种缓存策略有几个大的缺陷：</p>
+<ol>
+<li>首次请求时，cache中是没有数据的，需要访问数据库。</li>
+</ol>
+<p>解决办法：提前缓存热点数据。</p>
+<ol>
+<li>当有大量的写请求的时候，会频繁删除缓存中的数据，会影响缓存的命中率，影响系统的可用性。</li>
+</ol>
+<h3 id="2-Read-Write-Through-Pattern-读写穿透"><a href="#2-Read-Write-Through-Pattern-读写穿透" class="headerlink" title="2.Read&#x2F;Write Through Pattern(读写穿透)"></a>2.Read&#x2F;Write Through Pattern(读写穿透)</h3><p>Read&#x2F;Write Through Pattern 中服务端把 cache 视为主要数据存储，从中读取数据并将数据写入其中。cache 服务负责将此数据读取和写入 db，从而减轻了应用程序的职责。</p>
+<p>这种缓存读写策略小伙伴们应该也发现了在平时在开发过程中非常少见。抛去性能方面的影响，大概率是因为我们经常使用的分布式缓存 Redis 并没有提供 cache 将数据写入 db 的功能。</p>
+<p><strong>写：</strong></p>
+<ul>
+<li>先查 cache，cache 中不存在，直接更新 db。</li>
+<li>cache 中存在，则先更新 cache，然后 cache 服务自己更新 db（<strong>同步更新 cache 和 db</strong>）。</li>
+</ul>
+<img src="../images/image-20240829194827697.png" alt="image-20240829194827697" style="zoom:80%;" />
+
+<p><strong>读：</strong></p>
+<ul>
+<li>从 cache 中读取数据，读取到就直接返回 。</li>
+<li>读取不到的话，先从 db 加载，写入到 cache 后返回响应。<img src="../images/image-20240829194853613.png" alt="image-20240829194853613" style="zoom:80%;" /></li>
+</ul>
+<h3 id="3-Write-Behind-Pattern-异步缓存写入"><a href="#3-Write-Behind-Pattern-异步缓存写入" class="headerlink" title="3.Write Behind Pattern(异步缓存写入)"></a>3.Write Behind Pattern(异步缓存写入)</h3><p>这种模式和读写穿透模式很像，都是有缓存服务来负责缓存和数据库的读写的。</p>
+<p>异步缓存写入，它在更新缓存时，不会立马更新数据库，而是异步批量进行更新数据库。这种方式对数据的一致性带来了更大的挑战，比如还没进行异步批量更新数据库时，cache缓存宕机了，数据就丢失了。</p>
+<p>这种模式下，数据库的写性能非常高，非常适合数据经常变化，但对数据的一致性没那么高要求的场景。</p>
+<h2 id="redis除了做缓存，还可以做什么？"><a href="#redis除了做缓存，还可以做什么？" class="headerlink" title="redis除了做缓存，还可以做什么？"></a>redis除了做缓存，还可以做什么？</h2><p><strong>分布式锁</strong>：通过 Redis 来做分布式锁是一种比较常见的方式。通常情况下，我们都是基于 Redisson 来实现分布式锁。</p>
+<p><strong>限流</strong>：一般是通过 Redis + Lua 脚本的方式来实现限流。如果不想自己写 Lua 脚本的话，也可以直接利用 Redisson 中的 <code>RRateLimiter</code> 来实现分布式限流，其底层实现就是基于 Lua 代码+令牌桶算法。</p>
+<p><strong>消息队列</strong>：Redis 自带的 List 数据结构可以作为一个简单的队列使用。Redis 5.0 中增加的 Stream 类型的数据结构更加适合用来做消息队列。它比较类似于 Kafka，有主题和消费组的概念，支持消息持久化以及 ACK 机制。</p>
+<p><strong>延时队列</strong>：Redisson 内置了延时队列（基于 Sorted Set 实现的）。</p>
+<p><strong>分布式 Session</strong> ：利用 String 或者 Hash 数据类型保存 Session 数据，所有的服务器都可以访问。</p>
+<p><strong>复杂业务场景</strong>：通过 Redis 以及 Redis 扩展（比如 Redisson）提供的数据结构，我们可以很方便地完成很多复杂的业务场景比如通过 Bitmap 统计活跃用户、通过 Sorted Set 维护排行榜。</p>
+<h2 id="redis的五种基本数据类型："><a href="#redis的五种基本数据类型：" class="headerlink" title="redis的五种基本数据类型："></a>redis的五种基本数据类型：</h2><h3 id="String："><a href="#String：" class="headerlink" title="String："></a>String：</h3><p>可以用来存储任何类型的数据。</p>
+<h4 id="应用场景："><a href="#应用场景：" class="headerlink" title="应用场景："></a>应用场景：</h4><p>1.计数器：INCR</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">SET number 1</span><br><span class="line">OK</span><br><span class="line">INCR number <span class="comment"># 将 key 中储存的数字值增一</span></span><br><span class="line">(<span class="built_in">integer</span>) 2</span><br><span class="line">GET number</span><br><span class="line"><span class="string">&quot;2&quot;</span></span><br><span class="line">DECR number <span class="comment"># 将 key 中储存的数字值减一</span></span><br><span class="line">(<span class="built_in">integer</span>) 1</span><br><span class="line">GET number</span><br><span class="line"><span class="string">&quot;1&quot;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>2.缓存 Session、Token、图片地址、序列化后的对象(相比较于 Hash 存储更节省内存)</p>
+<p>3.分布式锁：利用 <code>SETNX key value</code> 命令可以实现一个最简易的分布式锁</p>
+<h3 id="List："><a href="#List：" class="headerlink" title="List："></a>List：</h3><p>Redis 的 List 的实现为一个 <strong>双向链表</strong>，即可以支持反向查找和遍历，更方便操作</p>
+<p><strong>通过 <code>RPUSH/LPOP</code> 或者 <code>LPUSH/RPOP</code>实现队列</strong></p>
+<p><strong>通过 <code>RPUSH/RPOP</code>或者<code>LPUSH/LPOP</code> 实现栈</strong></p>
+<p><img src="/../images/image-20240829194912692.png" alt="image-20240829194912692"></p>
+<p><strong>通过 <code>LRANGE</code> 查看对应下标范围的列表元素</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">RPUSH myList value1 value2 value3</span><br><span class="line">(integer) 3</span><br><span class="line">LRANGE myList 0 1</span><br><span class="line">1) &quot;value1&quot;</span><br><span class="line">2) &quot;value2&quot;</span><br><span class="line">LRANGE myList 0 -1</span><br><span class="line">1) &quot;value1&quot;</span><br><span class="line">2) &quot;value2&quot;</span><br><span class="line">3) &quot;value3&quot;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>通过 <code>LRANGE</code> 命令，你可以基于 List 实现分页查询，性能非常高！</p>
+<p><strong>通过 <code>LLEN</code> 查看链表长度</strong>：</p>
+<h4 id="应用场景：-1"><a href="#应用场景：-1" class="headerlink" title="应用场景："></a>应用场景：</h4><p>获取最新文章、最新动态</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">LPUSH`、`LRANGE</span><br></pre></td></tr></table></figure>
+
+<h3 id="Hash"><a href="#Hash" class="headerlink" title="Hash:"></a>Hash:</h3><p>Redis 中的 Hash 是一个 String 类型的 field-value（键值对） 的映射表，特别适合用于存储对象，后续操作的时候，可以直接修改这个对象中的某些字段的值。</p>
+<p>它类似于 JDK1.8 前的 <code>HashMap</code>，内部实现也差不多(数组 + 链表)。不过，Redis 的 Hash 做了更多优化。</p>
+<img src="../images/image-20240829194928980.png" alt="image-20240829194928980" style="zoom:80%;" />
+
+<h4 id="应用场景：-2"><a href="#应用场景：-2" class="headerlink" title="应用场景："></a>应用场景：</h4><p><strong>对象数据存储场景</strong>：</p>
+<p>用户信息、商品信息、文章信息、购物车信息。</p>
+<p><code>HSET</code> （设置单个字段的值）、<code>HMSET</code>（设置多个字段的值）、<code>HGET</code>（获取单个字段的值）、<code>HMGET</code>（获取多个字段的值）</p>
+<h3 id="Set："><a href="#Set：" class="headerlink" title="Set："></a>Set：</h3><p>Redis 中的 Set 类型是一种无序集合，集合中的元素没有先后顺序但都唯一，有点类似于 Java 中的 <code>HashSet</code>。当你需要存储一个列表数据，又不希望出现重复数据时，Set 是一个很好的选择，并且 Set 提供了判断某个元素是否在一个 Set 集合内的重要接口，这个也是 List 所不能提供的。</p>
+<p>你可以基于 Set 轻易实现交集、并集、差集的操作，比如你可以将一个用户所有的关注人存在一个集合中，将其所有粉丝存在一个集合。这样的话，Set 可以非常方便的实现如共同关注、共同粉丝、共同喜好等功能。这个过程也就是求交集的过程。</p>
+<img src="../images/image-20240829194948884.png" alt="image-20240829194948884" style="zoom:80%;" />
+
+<h4 id="应用场景：-3"><a href="#应用场景：-3" class="headerlink" title="应用场景："></a>应用场景：</h4><p>1.<strong>需要存放的数据不能重复的场景</strong>：</p>
+<p>网站 UV 统计（数据量巨大的场景还是 <code>HyperLogLog</code>更适合一些）、文章点赞、动态点赞等场景。</p>
+<ul>
+<li>相关命令：<code>SCARD</code>（获取集合数量） 。</li>
+</ul>
+<p>2.<strong>需要获取多个数据源交集、并集和差集的场景</strong>：</p>
+<p>共同好友(交集)、共同粉丝(交集)、共同关注(交集)、好友推荐（差集）、音乐推荐（差集）、订阅号推荐（差集+交集） 等场景。</p>
+<p>3.<strong>需要随机获取数据源中的元素的场景</strong>：</p>
+<p>抽奖系统、随机点名等场景。</p>
+<p><code>SPOP</code>（随机获取集合中的元素并移除，适合不允许重复中奖的场景）、<code>SRANDMEMBER</code>（随机获取集合中的元素，适合允许重复中奖的场景）</p>
+<h3 id="Sorted-Set："><a href="#Sorted-Set：" class="headerlink" title="Sorted Set："></a>Sorted Set：</h3><p>Sorted Set 类似于 Set，但和 Set 相比，Sorted Set 增加了一个权重参数 <code>score</code>，使得集合中的元素能够按 <code>score</code> 进行有序排列，还可以通过 <code>score</code> 的范围来获取元素的列表。</p>
+<h4 id="应用场景：-4"><a href="#应用场景：-4" class="headerlink" title="应用场景："></a>应用场景：</h4><p><strong>需要随机获取数据源中的元素根据某个权重进行排序的场景</strong></p>
+<p>各种排行榜比如直播间送礼物的排行榜、朋友圈的微信步数排行榜、王者荣耀中的段位排行榜、话题热度排行榜等等。</p>
+<p><code>ZRANGE</code> (从小到大排序)、 <code>ZREVRANGE</code> （从大到小排序）、<code>ZREVRANK</code> (指定元素排名)</p>
+<h3 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h3><table>
+<thead>
+<tr>
+<th><strong>数据类型</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>String</td>
+<td>一种二进制安全的数据类型，可以用来存储任何类型的数据比如字符串、整数、浮点数、图片（图片的 base64 编码或者解码或者图片的路径）、序列化后的对象。</td>
+</tr>
+<tr>
+<td>List</td>
+<td>Redis 的 List 的实现为一个双向链表，即可以支持反向查找和遍历，更方便操作，不过带来了部分额外的内存开销。</td>
+</tr>
+<tr>
+<td>Hash</td>
+<td>一个 String 类型的 field-value（键值对） 的映射表，特别适合用于存储对象，后续操作的时候，你可以直接修改这个对象中的某些字段的值。</td>
+</tr>
+<tr>
+<td>Set</td>
+<td>无序集合，集合中的元素没有先后顺序但都唯一，有点类似于 Java 中的 <code>HashSet</code> 。</td>
+</tr>
+<tr>
+<td>Zset</td>
+<td>和 Set 相比，Sorted Set 增加了一个权重参数 <code>score</code>，使得集合中的元素能够按 <code>score</code> 进行有序排列，还可以通过 <code>score</code> 的范围来获取元素的列表。有点像是 Java 中 <code>HashMap</code> 和 <code>TreeSet</code> 的结合体。</td>
+</tr>
+</tbody></table>
+<h2 id="Redis的持久化机制？"><a href="#Redis的持久化机制？" class="headerlink" title="Redis的持久化机制？"></a>Redis的持久化机制？</h2><p>使用缓存时需要对内存中的数据进行持久化，也就是把内存中的数据写入到磁盘里。大部分原因是为了重启应用后进行数据恢复以及进行数据同步的时候会用到持久化机制。</p>
+<p>redis有三种持久化机制的方法：</p>
+<ul>
+<li>追加文件的方式(AOF)</li>
+<li>拍摄快照的方式(RDB)</li>
+<li>AOF + RDB 的混合方式(在redis4.0时才加入)</li>
+</ul>
+<h3 id="那么是什么RDB持久化？"><a href="#那么是什么RDB持久化？" class="headerlink" title="那么是什么RDB持久化？"></a>那么是什么RDB持久化？</h3><p>redis可以通过<strong>创建快照</strong>的方式来获得存储在内存中的数据的<strong>某个时间节点</strong>的副本。创建快照后，可以对快照进行备份，传输到不同的服务器，可以在不同的服务器上得到相同的数据；还可以将快照保存到本地，进行数据恢复时会用到。</p>
+<p>快照持久化是 Redis 默认采用的持久化方式。</p>
+<h3 id="Redis创建快照时会阻塞主线程吗？"><a href="#Redis创建快照时会阻塞主线程吗？" class="headerlink" title="Redis创建快照时会阻塞主线程吗？"></a>Redis创建快照时会阻塞主线程吗？</h3><p>redis提供了两个生成快照的命令，分别是：</p>
+<p>save：这个命令会同步保存操作，会阻塞主线程的执行。</p>
+<p>bgsave：这个命令会创建出一个子进程来进行快照文件的创建，不会影响到主线程的执行。redis中默认采用bgsave命令来创建快照。</p>
+<h3 id="AOF持久化："><a href="#AOF持久化：" class="headerlink" title="AOF持久化："></a>AOF持久化：</h3><p>与快照相比，AOF持久化的实时性更好，默认情况下Redis没有开启AOF(Redis6.0之后默认是开启的)，可以通过appendonly参数来进行设置。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">appendonly yes</span><br></pre></td></tr></table></figure>
+
+<p>开启AOF持久化机制后，redis每执行一个写操作都会把该操作写道AOF缓存区里，在把缓冲区中的数据写到AOF文件内，最后通过持久化方式的配置文件把系统内核缓冲区中的数据同步到磁盘上。</p>
+<p>只有同步到磁盘中才算持久化保存了，否则依然存在数据丢失的风险，比如说：系统内核缓存区的数据还未同步，磁盘机器就宕机了，那这部分数据就算丢失了。</p>
+<h3 id="AOF的基本工作流程："><a href="#AOF的基本工作流程：" class="headerlink" title="AOF的基本工作流程："></a>AOF的基本工作流程：</h3><ol>
+<li>命令追加：追加redis中的写操作命令到AOF缓冲区里。</li>
+<li>文件写入：将AOF缓冲区中的数据添加到一个AOF文件内，这个文件在系统内核缓冲区，此时还没有同步到磁盘里。</li>
+<li>文件同步：将系统内核缓冲区中的AOF文件同步到磁盘上。</li>
+<li>文件重写：当AOF文件过大时，会重写AOF文件。</li>
+<li>重启加载文件: 当redis重启时,会加载这个AOF文件进行数据恢复。</li>
+</ol>
+<img src="../images/image-20240829195009366.png" alt="image-20240829195009366" style="zoom:80%;" />
+
+<h3 id="AOF的刷盘策略有哪些？"><a href="#AOF的刷盘策略有哪些？" class="headerlink" title="AOF的刷盘策略有哪些？"></a>AOF的刷盘策略有哪些？</h3><p>在redis中的AOF的刷盘策略有三种：</p>
+<p><code>appendfsync always</code>：主线程调用 <code>write</code> 执行写操作后，后台线程（ <code>aof_fsync</code> 线程）立即会调用 <code>fsync</code> 函数同步 AOF 文件（刷盘），<code>fsync</code> 完成后线程返回，这样会严重降低 Redis 的性能（<code>write</code> + <code>fsync</code>）。</p>
+<p><code>appendfsync everysec</code>：主线程调用 <code>write</code> 执行写操作后立即返回，由后台线程（ <code>aof_fsync</code> 线程）每秒钟调用 <code>fsync</code> 函数（系统调用）同步一次 AOF 文件（<code>write</code>+<code>fsync</code>，<code>fsync</code>间隔为 1 秒）</p>
+<p><code>appendfsync no</code>：主线程调用 <code>write</code> 执行写操作后立即返回，让操作系统决定何时进行同步，Linux 下一般为 30 秒一次（<code>write</code>但不<code>fsync</code>，<code>fsync</code> 的时机由操作系统决定）。</p>
+<p>可以看出：<strong>这 3 种持久化方式的主要区别在于 <code>fsync</code> 同步 AOF 文件的时机（刷盘）</strong>。</p>
+<p>为了兼顾数据和写入性能，可以考虑 <code>appendfsync everysec</code> 选项 ，让 Redis 每秒同步一次 AOF 文件，Redis 性能受到的影响较小。而且这样即使出现系统崩溃，用户最多只会丢失一秒之内产生的数据。当硬盘忙于执行写入操作的时候，Redis 还会优雅的放慢自己的速度以便适应硬盘的最大写入速度。</p>
+<h3 id="AOF为什么在执行完命令之后进行日志记录？"><a href="#AOF为什么在执行完命令之后进行日志记录？" class="headerlink" title="AOF为什么在执行完命令之后进行日志记录？"></a>AOF为什么在执行完命令之后进行日志记录？</h3><p>Mysql通常是在执行命令之前就记录日志(方便故障恢复)，redis的AOF是在命令执行结束后进行记录日志。</p>
+<img src="../images/image-20240829195026751.png" alt="image-20240829195026751" style="zoom:80%;" />
+
+<ul>
+<li>避免额外的检查开销，AOF 记录日志不会对命令进行语法检查；</li>
+<li>在命令执行完之后再记录，不会阻塞当前的命令执行。</li>
+</ul>
+<p>这样也带来了风险（我在前面介绍 AOF 持久化的时候也提到过）：</p>
+<ul>
+<li>如果刚执行完命令 Redis 就宕机会导致对应的修改丢失；</li>
+<li>可能会阻塞后续其他命令的执行（AOF 记录日志是在 Redis 主线程中进行的）；</li>
+</ul>
+<h3 id="如何旋转RDB和AOF？"><a href="#如何旋转RDB和AOF？" class="headerlink" title="如何旋转RDB和AOF？"></a>如何旋转RDB和AOF？</h3><p><strong>RDB 比 AOF 优秀的地方</strong>：</p>
+<ul>
+<li>RDB 文件存储的内容是经过压缩的二进制数据， 保存着某个时间点的数据集，文件很小，适合做数据的备份，灾难恢复。AOF 文件存储的是每一次写命令，类似于 MySQL 的 binlog 日志，通常会比 RDB 文件大很多。当 AOF 变得太大时，Redis 能够在后台自动重写 AOF。新的 AOF 文件和原有的 AOF 文件所保存的数据库状态一样，但体积更小。不过， Redis 7.0 版本之前，如果在重写期间有写入命令，AOF 可能会使用大量内存，重写期间到达的所有写入命令都会写入磁盘两次。</li>
+<li>使用 RDB 文件恢复数据，直接解析还原数据即可，不需要一条一条地执行命令，速度非常快。而 AOF 则需要依次执行每个写命令，速度非常慢。也就是说，与 AOF 相比，恢复大数据集的时候，RDB 速度更快。</li>
+</ul>
+<p><strong>AOF 比 RDB 优秀的地方</strong>：</p>
+<ul>
+<li>RDB 的数据安全性不如 AOF，没有办法实时或者秒级持久化数据。生成 RDB 文件的过程是比较繁重的， 虽然 BGSAVE 子进程写入 RDB 文件的工作不会阻塞主线程，但会对机器的 CPU 资源和内存资源产生影响，严重的情况下甚至会直接把 Redis 服务干宕机。AOF 支持秒级数据丢失（取决 fsync 策略，如果是 everysec，最多丢失 1 秒的数据），仅仅是追加命令到 AOF 文件，操作轻量。</li>
+<li>RDB 文件是以特定的二进制格式保存的，并且在 Redis 版本演进中有多个版本的 RDB，所以存在老版本的 Redis 服务不兼容新版本的 RDB 格式的问题。</li>
+<li>AOF 以一种易于理解和解析的格式包含所有操作的日志。你可以轻松地导出 AOF 文件进行分析，你也可以直接操作 AOF 文件来解决一些问题。比如，如果执行<code>FLUSHALL</code>命令意外地刷新了所有内容后，只要 AOF 文件没有被重写，删除最新命令并重启即可恢复之前的状态。</li>
+</ul>
+<p><strong>综上：</strong></p>
+<ul>
+<li>Redis 保存的数据丢失一些也没什么影响的话，可以选择使用 RDB。</li>
+<li>不建议单独使用 AOF，因为时不时地创建一个 RDB 快照可以进行数据库备份、更快的重启以及解决 AOF 引擎错误。</li>
+<li>如果保存的数据要求安全性比较高的话，建议同时开启 RDB 和 AOF 持久化或者开启 RDB 和 AOF 混合持久化。</li>
+</ul>
+<h2 id="什么是布隆过滤器"><a href="#什么是布隆过滤器" class="headerlink" title="什么是布隆过滤器?"></a>什么是布隆过滤器?</h2><p>布隆过滤器是一种由数组和一系列随机映射函数所组成的数据结构，它的数组中只能存储0或1。相比我们常用的list、map、set等数据结构，它所用的空间更少和效率更高，但缺点是返回的结果具有概率性，不准确。</p>
+<p>布隆过滤器会使用一个较大的bit数组来保存数据，数组中每个元素只占用1bit，并且每个元素只能是0或1。</p>
+<h2 id="布隆过滤器的原理介绍："><a href="#布隆过滤器的原理介绍：" class="headerlink" title="布隆过滤器的原理介绍："></a>布隆过滤器的原理介绍：</h2><p><strong>当一个元素加入布隆过滤器中的时候，会进行如下操作：</strong></p>
+<ol>
+<li>使用布隆过滤器中的哈希函数对元素值进行计算，得到哈希值（有几个哈希函数得到几个哈希值）。</li>
+<li>根据得到的哈希值，在位数组中把对应下标的值置为 1。</li>
+</ol>
+<p><strong>当我们需要判断一个元素是否存在于布隆过滤器的时候，会进行如下操作：</strong></p>
+<ol>
+<li>对给定元素再次进行相同的哈希计算；</li>
+<li>得到值之后判断位数组中的每个元素是否都为 1，如果值都为 1，那么说明这个值在布隆过滤器中，如果存在一个值不为 1，说明该元素不在布隆过滤器中。</li>
+</ol>
+<p>Bloom Filter 的简单原理图如下：<img src="/../images/image-20240829195048881.png" alt="image-20240829195048881"></p>
+<p>如图所示，当字符串存储要加入到布隆过滤器中时，该字符串首先由多个哈希函数生成不同的哈希值，然后将对应的位数组的下标设置为 1（当位数组初始化时，所有位置均为 0）。当第二次存储相同字符串时，因为先前的对应位置已设置为 1，所以很容易知道此值已经存在（去重非常方便）。</p>
+<p>如果我们需要判断某个字符串是否在布隆过滤器中时，只需要对给定字符串再次进行相同的哈希计算，得到值之后判断位数组中的每个元素是否都为 1，如果值都为 1，那么说明这个值在布隆过滤器中，如果存在一个值不为 1，说明该元素不在布隆过滤器中。</p>
+<p><strong>不同的字符串可能哈希出来的位置相同，这种情况我们可以适当增加位数组大小或者调整我们的哈希函数。</strong></p>
+<p>综上，我们可以得出：<strong>布隆过滤器说某个元素存在，小概率会误判。布隆过滤器说某个元素不在，那么这个元素一定不在</strong></p>
+<h2 id="布隆过滤器的使用场景："><a href="#布隆过滤器的使用场景：" class="headerlink" title="布隆过滤器的使用场景："></a>布隆过滤器的使用场景：</h2><ul>
+<li>判断给定数据是否存在：比如判断一个数字是否存在于包含大量数字的数字集中（数字集很大，上亿）、 防止缓存穿透（判断请求的数据是否有效避免直接绕过缓存请求数据库）等等、邮箱的垃圾邮件过滤（判断一个邮件地址是否在垃圾邮件列表中）、黑名单功能（判断一个 IP 地址或手机号码是否在黑名单中）等等。</li>
+<li>去重：比如爬给定网址的时候对已经爬取过的 URL 去重、对巨量的 QQ 号&#x2F;订单号去重。</li>
+</ul>
+<h3 id="guava的布隆过滤器实现："><a href="#guava的布隆过滤器实现：" class="headerlink" title="guava的布隆过滤器实现："></a>guava的布隆过滤器实现：</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;com.google.guava&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;guava&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;28.0-jre&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>它有一个重大的缺陷就是只能单机使用（另外，容量扩展也不容易），而现在互联网一般都是分布式的场景。</strong></p>
+<h3 id="Redis-中的布隆过滤器"><a href="#Redis-中的布隆过滤器" class="headerlink" title="Redis 中的布隆过滤器"></a><a target="_blank" rel="noopener" href="https://javaguide.cn/cs-basics/data-structure/bloom-filter.html#redis-%E4%B8%AD%E7%9A%84%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8">Redis 中的布隆过滤器</a></h3><h2 id="基于redis实现分布式锁："><a href="#基于redis实现分布式锁：" class="headerlink" title="基于redis实现分布式锁："></a>基于redis实现分布式锁：</h2><h3 id="基于redis实现一个最简单的分布式锁："><a href="#基于redis实现一个最简单的分布式锁：" class="headerlink" title="基于redis实现一个最简单的分布式锁："></a>基于redis实现一个最简单的分布式锁：</h3><p>不论是本地锁还是分布式锁，<strong>核心都在于“互斥”</strong>。</p>
+<p>我们使用setnx命令来帮助实现分布锁。<code>SETNX</code> 即 <strong>SET if Not Exists</strong> (对应 Java 中的 <code>setIfAbsent</code> 方法)，如果 key 不存在的话，才会设置 key 的值。如果 key 已经存在， <code>SETNX</code> 啥也不做。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">SETNX lockKey uniqueValue</span><br><span class="line">(integer) 1</span><br><span class="line">SETNX lockKey uniqueValue</span><br><span class="line">(integer) 0</span><br></pre></td></tr></table></figure>
+
+<p>释放锁的话，直接通过 <code>DEL</code> 命令删除对应的 key 即可。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">DEL lockKey</span><br><span class="line">(integer) 1</span><br></pre></td></tr></table></figure>
+
+<p>为了防止误删操作，可以使用lua脚本来通过判断key的value唯一值进行删除锁。选用 Lua 脚本是为了保证解锁操作的原子性。因为 Redis 在执行 Lua 脚本时，可以以原子性的方式执行，从而保证了锁释放操作的原子性。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// 释放锁时，先比较锁对应的 value 值是否相等，避免锁的误释放</span><br><span class="line">if redis.call(&quot;get&quot;,KEYS[1]) == ARGV[1] then</span><br><span class="line">    return redis.call(&quot;del&quot;,KEYS[1])</span><br><span class="line">else</span><br><span class="line">    return 0</span><br><span class="line">end</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src="/" alt="Redis 实现简易分布式锁"></p>
+<p>这是一种最简易的 Redis 分布式锁实现方式，实现简单，性能高效。不过，这种方式可能存在一些问题。比如释放锁时应用突然挂掉了，就导致锁无法释放，造成共享资源无法被其他线程访问。</p>
+<p>为了避免锁无法被释放，我们可以<strong>给这个 key（也就是锁） 设置一个过期时间</strong>。</p>
+<p>这样确实可以解决问题，不过，这种解决办法同样存在漏洞：<strong>如果操作共享资源的时间大于过期时间，就会出现锁提前过期的问题，进而导致分布式锁直接失效。如果锁的超时时间设置过长，又会影响到性能。</strong></p>
+<h3 id="锁续期："><a href="#锁续期：" class="headerlink" title="锁续期："></a>锁续期：</h3><p>可以使用Redisson自动实现锁的续期。  </p>
+<p>Redisson 是一个开源的 Java 语言 Redis 客户端，提供了很多功能，其中就包括多种分布式锁的实现。Redisson 中的分布式锁自带自动续期机制，使用起来很简单，原理也比较简单，其中提供了一个专门用来监控和续期锁的 <strong>Watch Dog（ 看门狗）</strong>，如果操作共享资源的线程还未执行完成的话，Watch Dog 会不断地延长锁的过期时间，进而保证锁不会因为超时而被释放。</p>
+<p><img src="/../images/image-20240829195112739.png" alt="image-20240829195112739"></p>
+<p>默认情况下，每过 10 秒，看门狗就会执行续期操作，将锁的超时时间设置为 30 秒。看门狗续期前也会先判断是否需要执行续期操作，需要才会执行续期，否则取消续期操作。</p>
+<p>如果使用 Redis 来实现分布式锁的话，推荐直接基于 Redisson 来做。</p>
+<h3 id="可重入锁？"><a href="#可重入锁？" class="headerlink" title="可重入锁？"></a>可重入锁？</h3><p>可重入锁（Reentrant Lock）是一种特殊的锁机制，允许一个已经拥有锁的线程再次获取同一把锁而不产生死锁。简单来说，可重入锁允许一个线程多次获取同一把锁，而不会因为自身获取锁而导致阻塞</p>
+<p>Java 中的 <code>synchronized</code> 和 <code>ReentrantLock</code> 都属于可重入锁。</p>
+<p><strong>不可重入的分布式锁基本可以满足绝大部分业务场景了，一些特殊的场景可能会需要使用可重入的分布式锁。</strong></p>
+<p>可重入分布式锁的实现核心思路是线程在获取锁的时候判断是否为自己的锁，如果是的话，就不用再重新获取了。为此，我们可以为每个锁关联一个可重入计数器和一个占有它的线程。当可重入计数器大于 0 时，则锁被占有，需要判断占有该锁的线程和请求获取锁的线程是否为同一个。</p>
+<p>实际项目中，我们不需要自己手动实现，推荐使用我们上面提到的 <strong>Redisson</strong> ，其内置了多种类型的锁比如可重入锁（Reentrant Lock）、自旋锁（Spin Lock）、公平锁（Fair Lock）、多重锁（MultiLock）、 红锁（RedLock）、 读写锁（ReadWriteLock）。</p>
+<h2 id="redis实现点赞？"><a href="#redis实现点赞？" class="headerlink" title="redis实现点赞？"></a>redis实现点赞？</h2><p><strong>方案一：使用哈希表（Hash）</strong></p>
+<p>哈希表是一种键值对结构，可以用来存储点赞用户的信息。每个点赞用户都有一个唯一的 ID，可以将这些 ID 存储在哈希表中。</p>
+<p><strong>数据结构：</strong></p>
+<p>点赞用户的哈希表</p>
+<ul>
+<li>键：<code>likes:post_id</code>，其中 <code>post_id</code> 是帖子的唯一标识。</li>
+<li>值：存储点赞用户 ID 的哈希表，键为用户 ID，值可以设置为 1 或任何其他值。</li>
+</ul>
+<p><strong>操作方法：</strong></p>
+<p><strong>1.点赞:</strong></p>
+<ul>
+<li>使用 <code>HSET</code> 命令将用户 ID 添加到哈希表中。</li>
+<li>例如，如果用户 ID 为 <code>user123</code> 对帖子 <code>post456</code> 点赞，可以使用：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HSET likes:post456 user123 1</span><br></pre></td></tr></table></figure>
+
+<p><strong>2.取消点赞:</strong></p>
+<ul>
+<li>使用 <code>HDEL</code> 命令从哈希表中删除用户 ID。</li>
+<li>例如，如果用户 ID 为 <code>user123</code> 取消对帖子 <code>post456</code> 的点赞，可以使用：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HDEL likes:post456 user123</span><br></pre></td></tr></table></figure>
+
+<p><strong>3.查询点赞数</strong>：</p>
+<ul>
+<li>使用 <code>HLEN</code> 命令获取哈希表中的键值对数量。</li>
+<li>例如，查询帖子 <code>post456</code> 的点赞数，可以使用：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HLEN likes:post456</span><br></pre></td></tr></table></figure>
+
+<p><strong>4.查询是否点赞:</strong></p>
+<ul>
+<li>使用 <code>HEXISTS</code> 命令检查用户 ID 是否存在于哈希表中。</li>
+<li>例如，查询用户 ID <code>user123</code> 是否对帖子 <code>post456</code> 点赞，可以使用：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HEXISTS likes:post456 user123</span><br></pre></td></tr></table></figure>
+
+<p><strong>5.获取点赞用户列表:</strong></p>
+<ul>
+<li>使用 <code>HGETALL</code> 命令获取哈希表中的所有键值对。</li>
+<li>例如，获取帖子 <code>post456</code> 的所有点赞用户，可以使用：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HGETALL likes:post456</span><br></pre></td></tr></table></figure>
+
+<p><strong>方案二：使用集合（Set）</strong></p>
+<p>集合是一种不允许重复成员的数据结构，可以用来存储点赞用户的 ID。</p>
+<p><strong>数据结构</strong></p>
+<p>点赞用户的集合：</p>
+<ul>
+<li>键：<code>likes:post_id</code>，其中 <code>post_id</code> 是帖子的唯一标识。</li>
+<li>值：存储点赞用户 ID 的集合。</li>
+</ul>
+<p><strong>1.点赞:</strong></p>
+<ul>
+<li>使用 <code>SADD</code> 命令将用户 ID 添加到集合中。</li>
+<li>例如，如果用户 ID 为 <code>user123</code> 对帖子 <code>post456</code> 点赞，可以使用：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SADD likes:post456 user123</span><br></pre></td></tr></table></figure>
+
+<p><strong>2.取消点赞:</strong></p>
+<ul>
+<li>使用 <code>SREM</code> 命令从集合中删除用户 ID。</li>
+<li>例如，如果用户 ID 为 <code>user123</code> 取消对帖子 <code>post456</code> 的点赞，可以使用：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SREM likes:post456 user123</span><br></pre></td></tr></table></figure>
+
+<p><strong>3.查询点赞数:</strong></p>
+<ul>
+<li>使用 <code>SCARD</code> 命令获取集合中的成员数量。</li>
+<li>例如，查询帖子 <code>post456</code> 的点赞数，可以使用：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SCARD likes:post456</span><br></pre></td></tr></table></figure>
+
+<p><strong>4.查询是否点赞:</strong></p>
+<ul>
+<li>使用 <code>SISMEMBER</code> 命令检查用户 ID 是否存在于集合中。</li>
+<li>例如，查询用户 ID <code>user123</code> 是否对帖子 <code>post456</code> 点赞，可以使用：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SISMEMBER likes:post456 user123</span><br></pre></td></tr></table></figure>
+
+<p><strong>5.获取点赞用户列表:</strong></p>
+<ul>
+<li>使用 <code>SMEMBERS</code> 命令获取集合中的所有成员。</li>
+<li>例如，获取帖子 <code>post456</code> 的所有点赞用户，可以使用：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SMEMBERS likes:post456</span><br></pre></td></tr></table></figure>
+
+</article><!-- lincense--><div class="license-wrapper"><p> <span>Author:  </span><a href="http://example.com">WANG</a></p><p> <span>Link:  </span><a href="http://example.com/2024/08/29/Redis/">http://example.com/2024/08/29/Redis/</a></p><p> <span>Copyright:  </span><span>All articles in this blog are licensed under <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/3.0">CC BY-NC-SA 3.0</a> unless stating additionally.</span></p></div><div class="post-paginator"><a class="prevSlogan" href="/2024/08/29/ThreadLocal/" title="ThreadLocal"><span>< PreviousPost</span><br><span class="prevTitle">ThreadLocal</span></a><a class="nextSlogan" href="/2024/08/29/Mysql%E6%95%B0%E6%8D%AE%E5%BA%93/" title="Mysql数据库"><span>NextPost ></span><br><span class="nextTitle">Mysql数据库</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#redis%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%99%E4%B9%88%E5%BF%AB%EF%BC%9F"><span class="toc-number">1.</span> <span class="toc-text">redis为什么这么快？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E7%94%A8redis%EF%BC%9F"><span class="toc-number">2.</span> <span class="toc-text">为什么要用redis？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E7%A7%8D%E5%B8%B8%E8%A7%81%E7%9A%84%E7%BC%93%E5%AD%98%E8%AF%BB%E5%86%99%E7%AD%96%E7%95%A5"><span class="toc-number">3.</span> <span class="toc-text">三种常见的缓存读写策略</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-Cache-Aside-Pattern-%E6%97%81%E8%B7%AF%E7%BC%93%E5%AD%98%E7%AD%96%E7%95%A5"><span class="toc-number">3.1.</span> <span class="toc-text">1.Cache Aside Pattern(旁路缓存策略)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E5%88%A0%E9%99%A4cache%EF%BC%8C%E8%80%8C%E4%B8%8D%E6%98%AF%E6%9B%B4%E6%96%B0cache%EF%BC%9F"><span class="toc-number">3.1.1.</span> <span class="toc-text">为什么删除cache，而不是更新cache？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9C%A8%E5%86%99%E6%95%B0%E6%8D%AE%E7%9A%84%E8%BF%87%E7%A8%8B%E4%B8%AD%EF%BC%8C%E5%8F%AF%E4%BB%A5%E5%85%88%E5%88%A0%E9%99%A4-cache-%EF%BC%8C%E5%90%8E%E6%9B%B4%E6%96%B0-db-%E4%B9%88%EF%BC%9F"><span class="toc-number">3.1.2.</span> <span class="toc-text">在写数据的过程中，可以先删除 cache ，后更新 db 么？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9C%A8%E5%86%99%E6%95%B0%E6%8D%AE%E7%9A%84%E8%BF%87%E7%A8%8B%E4%B8%AD%EF%BC%8C%E5%85%88%E6%9B%B4%E6%96%B0-db%EF%BC%8C%E5%90%8E%E5%88%A0%E9%99%A4-cache-%E5%B0%B1%E5%8F%AF%E4%BB%A5%E4%BA%86%E5%90%97%EF%BC%9F"><span class="toc-number">3.1.3.</span> <span class="toc-text">在写数据的过程中，先更新 db，后删除 cache 就可以了吗？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%99%E7%A7%8D%E7%AD%96%E7%95%A5%E6%9C%89%E4%BB%80%E4%B9%88%E7%BC%BA%E7%82%B9%EF%BC%9F"><span class="toc-number">3.1.4.</span> <span class="toc-text">这种策略有什么缺点？</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-Read-Write-Through-Pattern-%E8%AF%BB%E5%86%99%E7%A9%BF%E9%80%8F"><span class="toc-number">3.2.</span> <span class="toc-text">2.Read&#x2F;Write Through Pattern(读写穿透)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-Write-Behind-Pattern-%E5%BC%82%E6%AD%A5%E7%BC%93%E5%AD%98%E5%86%99%E5%85%A5"><span class="toc-number">3.3.</span> <span class="toc-text">3.Write Behind Pattern(异步缓存写入)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis%E9%99%A4%E4%BA%86%E5%81%9A%E7%BC%93%E5%AD%98%EF%BC%8C%E8%BF%98%E5%8F%AF%E4%BB%A5%E5%81%9A%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">4.</span> <span class="toc-text">redis除了做缓存，还可以做什么？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis%E7%9A%84%E4%BA%94%E7%A7%8D%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%EF%BC%9A"><span class="toc-number">5.</span> <span class="toc-text">redis的五种基本数据类型：</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#String%EF%BC%9A"><span class="toc-number">5.1.</span> <span class="toc-text">String：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF%EF%BC%9A"><span class="toc-number">5.1.1.</span> <span class="toc-text">应用场景：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#List%EF%BC%9A"><span class="toc-number">5.2.</span> <span class="toc-text">List：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF%EF%BC%9A-1"><span class="toc-number">5.2.1.</span> <span class="toc-text">应用场景：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Hash"><span class="toc-number">5.3.</span> <span class="toc-text">Hash:</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF%EF%BC%9A-2"><span class="toc-number">5.3.1.</span> <span class="toc-text">应用场景：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Set%EF%BC%9A"><span class="toc-number">5.4.</span> <span class="toc-text">Set：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF%EF%BC%9A-3"><span class="toc-number">5.4.1.</span> <span class="toc-text">应用场景：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Sorted-Set%EF%BC%9A"><span class="toc-number">5.5.</span> <span class="toc-text">Sorted Set：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF%EF%BC%9A-4"><span class="toc-number">5.5.1.</span> <span class="toc-text">应用场景：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93%EF%BC%9A"><span class="toc-number">5.6.</span> <span class="toc-text">总结：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis%E7%9A%84%E6%8C%81%E4%B9%85%E5%8C%96%E6%9C%BA%E5%88%B6%EF%BC%9F"><span class="toc-number">6.</span> <span class="toc-text">Redis的持久化机制？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%82%A3%E4%B9%88%E6%98%AF%E4%BB%80%E4%B9%88RDB%E6%8C%81%E4%B9%85%E5%8C%96%EF%BC%9F"><span class="toc-number">6.1.</span> <span class="toc-text">那么是什么RDB持久化？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Redis%E5%88%9B%E5%BB%BA%E5%BF%AB%E7%85%A7%E6%97%B6%E4%BC%9A%E9%98%BB%E5%A1%9E%E4%B8%BB%E7%BA%BF%E7%A8%8B%E5%90%97%EF%BC%9F"><span class="toc-number">6.2.</span> <span class="toc-text">Redis创建快照时会阻塞主线程吗？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AOF%E6%8C%81%E4%B9%85%E5%8C%96%EF%BC%9A"><span class="toc-number">6.3.</span> <span class="toc-text">AOF持久化：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AOF%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B%EF%BC%9A"><span class="toc-number">6.4.</span> <span class="toc-text">AOF的基本工作流程：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AOF%E7%9A%84%E5%88%B7%E7%9B%98%E7%AD%96%E7%95%A5%E6%9C%89%E5%93%AA%E4%BA%9B%EF%BC%9F"><span class="toc-number">6.5.</span> <span class="toc-text">AOF的刷盘策略有哪些？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AOF%E4%B8%BA%E4%BB%80%E4%B9%88%E5%9C%A8%E6%89%A7%E8%A1%8C%E5%AE%8C%E5%91%BD%E4%BB%A4%E4%B9%8B%E5%90%8E%E8%BF%9B%E8%A1%8C%E6%97%A5%E5%BF%97%E8%AE%B0%E5%BD%95%EF%BC%9F"><span class="toc-number">6.6.</span> <span class="toc-text">AOF为什么在执行完命令之后进行日志记录？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E6%97%8B%E8%BD%ACRDB%E5%92%8CAOF%EF%BC%9F"><span class="toc-number">6.7.</span> <span class="toc-text">如何旋转RDB和AOF？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8"><span class="toc-number">7.</span> <span class="toc-text">什么是布隆过滤器?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8%E7%9A%84%E5%8E%9F%E7%90%86%E4%BB%8B%E7%BB%8D%EF%BC%9A"><span class="toc-number">8.</span> <span class="toc-text">布隆过滤器的原理介绍：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF%EF%BC%9A"><span class="toc-number">9.</span> <span class="toc-text">布隆过滤器的使用场景：</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#guava%E7%9A%84%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8%E5%AE%9E%E7%8E%B0%EF%BC%9A"><span class="toc-number">9.1.</span> <span class="toc-text">guava的布隆过滤器实现：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Redis-%E4%B8%AD%E7%9A%84%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8"><span class="toc-number">9.2.</span> <span class="toc-text">Redis 中的布隆过滤器</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8Eredis%E5%AE%9E%E7%8E%B0%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%EF%BC%9A"><span class="toc-number">10.</span> <span class="toc-text">基于redis实现分布式锁：</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8Eredis%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E6%9C%80%E7%AE%80%E5%8D%95%E7%9A%84%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%EF%BC%9A"><span class="toc-number">10.1.</span> <span class="toc-text">基于redis实现一个最简单的分布式锁：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%94%81%E7%BB%AD%E6%9C%9F%EF%BC%9A"><span class="toc-number">10.2.</span> <span class="toc-text">锁续期：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%AF%E9%87%8D%E5%85%A5%E9%94%81%EF%BC%9F"><span class="toc-number">10.3.</span> <span class="toc-text">可重入锁？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis%E5%AE%9E%E7%8E%B0%E7%82%B9%E8%B5%9E%EF%BC%9F"><span class="toc-number">11.</span> <span class="toc-text">redis实现点赞？</span></a></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>
