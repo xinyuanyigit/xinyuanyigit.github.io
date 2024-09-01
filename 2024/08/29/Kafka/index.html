@@ -111,8 +111,7 @@
 <h3 id="和其他的消息队列相比，Kafka的优势在哪？"><a href="#和其他的消息队列相比，Kafka的优势在哪？" class="headerlink" title="和其他的消息队列相比，Kafka的优势在哪？"></a>和其他的消息队列相比，Kafka的优势在哪？</h3><p><strong>极致的性能</strong>：基于 Scala 和 Java 语言开发，设计中大量使用了批量处理和异步的思想，最高可以每秒处理千万级别的消息。</p>
 <p><strong>生态系统兼容性强</strong>：Kafka 与周边生态系统的兼容性是最好的，尤其在大数据和流计算领域。</p>
 <h3 id="队列模型？Kafka的消息模型是什么？"><a href="#队列模型？Kafka的消息模型是什么？" class="headerlink" title="队列模型？Kafka的消息模型是什么？"></a>队列模型？Kafka的消息模型是什么？</h3><p><strong>队列模型：早期的消息模型</strong></p>
-<img src="../images/image-20240831201140630.png" alt="image-20240831201140630" style="zoom:80%;" />
-
+<p><img src="/../images/image-20240901112441066.png" alt="image-20240901112441066"></p>
 <p><strong>使用队列（Queue）作为消息通信载体，满足生产者与消费者模式，一条消息只能被一个消费者使用，未被消费的消息在队列中保留直到被消费或超时。</strong>比如：我们生产者发送 100 条消息的话，两个消费者来消费，一般情况下两个消费者会按照消息发送的顺序各自消费一半。</p>
 <p><strong>队列模型存在的问题：</strong></p>
 <ol>
@@ -122,8 +121,7 @@
 </ol>
 <p><strong>发布-订阅模型:Kafka 消息模型：</strong></p>
 <p>发布-订阅模型主要是为了解决队列模型存在的问题。</p>
-<img src="../images/image-20240831201811459.png" alt="image-20240831201811459" style="zoom:67%;" />
-
+<p><img src="/../images/image-20240901112540790.png" alt="image-20240901112540790"></p>
 <p>发布订阅模型（Pub-Sub） 使用<strong>主题（Topic）</strong> 作为消息通信载体，类似于<strong>广播模式</strong>；发布者发布一条消息，该消息通过主题传递给所有的订阅者，<strong>在一条消息广播之后才订阅的用户则是收不到该条消息的</strong>。</p>
 <p>举个例子来说明这个问题：</p>
 <p>假设有一个名为”news”的主题，现在有三个订阅者A、B和C。在这个场景中：</p>
@@ -155,9 +153,7 @@
 <li><strong>高并发</strong>：支持数千个客户端同时读写</li>
 </ul>
 <h2 id="Kafka的核心概念："><a href="#Kafka的核心概念：" class="headerlink" title="Kafka的核心概念："></a>Kafka的核心概念：</h2><h3 id="什么是-Producer、Consumer、Broker、Topic、Partition？"><a href="#什么是-Producer、Consumer、Broker、Topic、Partition？" class="headerlink" title="什么是 Producer、Consumer、Broker、Topic、Partition？"></a>什么是 Producer、Consumer、Broker、Topic、Partition？</h3><p>Kafka 将生产者发布的消息发送到 <strong>Topic（主题）</strong> 中，需要这些消息的消费者可以订阅这些 <strong>Topic（主题）</strong>，</p>
-<p>Kafka集群架构：</p>
-<img src="../images/image-20240831202451890.png" alt="image-20240831202451890" style="zoom:80%;" />
-
+<p><img src="/../images/image-20240901112708118.png" alt="image-20240901112708118"></p>
 <p>Kafka 比较重要的几个概念：</p>
 <ol>
 <li><strong>Producer（生产者）</strong> : 产生消息的一方。</li>
