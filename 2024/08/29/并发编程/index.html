@@ -100,9 +100,12 @@
   i.fa.fa-comment
   .saying--><div class="cxo-profile-inner"><div class="profile-name">wangkehua</div><div class="profile-signature">for me</div><div class="friends"><div>FRIENDS</div><span><a href="//github.com/Longlongyu" target="_black">friendA</a></span><span><a href="//github.com/" target="_black">friendB</a></span><span><a href="//github.com/" target="_black">friendC</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">Mr.Wang's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">并发编程</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>2024-08-29</span></span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><h2 id="指令重排："><a href="#指令重排：" class="headerlink" title="指令重排："></a>指令重排：</h2><p>为了提升执行速度和性能，计算机在执行程序代码的时候，会对指令进行重排序。</p>
 <p><strong>指令重排序简单来说就是系统在执行代码的时候并不是按照你写代码的顺序依次顺序执行的。</strong></p>
-<p>常见的指令重排有以下两种情况：</p>
-<p><strong>编译器优化重排</strong>：编译器在不改变单线程程序语义的前提下，重新安排语句的执行顺序。</p>
-<p><strong>指令并行重排</strong>：现代处理器采用指令级并行技术来将多条指令重叠执行。如果不存在数据依赖性，处理器可以改变语句对应机器指令的执行顺序。</p>
+<p>常见的指令重排有以下情况：</p>
+<ol>
+<li><strong>编译器重排</strong>：编译器在编译过程中可能会对源代码中的指令进行重新排序，以优化代码执行效率。</li>
+<li><strong>CPU 重排</strong>：处理器在执行指令时，可能会改变指令的执行顺序，以便更好地利用流水线、缓存和其他硬件资源。</li>
+<li><strong>内存重排</strong>：内存系统可能会改变数据的读取和写入顺序，以优化性能。</li>
+</ol>
 <p>另外，内存系统也会有“重排序”，但又不是真正意义上的重排序。在 JMM 里表现为主存和本地内存的内容可能不一致，进而导致程序在多线程下执行可能出现问题。</p>
 <p>Java 源代码会经历 <strong>编译器优化重排 —&gt; 指令并行重排 —&gt; 内存系统重排</strong> 的过程，最终才变成操作系统可执行的指令序列。</p>
 <p><strong>指令重排序可以保证串行语义一致，但是没有义务保证多线程间的语义也一致</strong> ，所以在多线程下，指令重排序可能会导致一些问题。</p>
@@ -306,7 +309,7 @@
 <li>多个事务可以同时获取同一数据项上的共享锁，即多个读操作可以同时进行。</li>
 <li>一旦某个数据项上有共享锁，其他事务不能对该数据项加独占锁，直到所有共享锁被释放。</li>
 <li>当一个事务获取了一个数据项的共享锁后，它可以读取该数据项，但不能修改它。</li>
-<li>果一个事务想要修改数据，它必须等待所有对该数据的共享锁都被释放。</li>
+<li>一个事务想要修改数据，它必须等待所有对该数据的共享锁都被释放。</li>
 </ul>
 <p><strong>独占锁：</strong></p>
 <ul>

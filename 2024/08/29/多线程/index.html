@@ -279,7 +279,7 @@
 <h2 id="Thread类中的sleep-方法和Object类中的wait-方法做对比："><a href="#Thread类中的sleep-方法和Object类中的wait-方法做对比：" class="headerlink" title="Thread类中的sleep()方法和Object类中的wait()方法做对比："></a>Thread类中的sleep()方法和Object类中的wait()方法做对比：</h2><p><strong>共同点：</strong>两者都可以暂停线程的执行。</p>
 <p><strong>区别：</strong></p>
 <ul>
-<li><code>sleep()</code> 方法没有释放锁，而 <code>wait()</code> 方法释放了锁** 。</li>
+<li><code>sleep()</code> 方法没有释放锁，而 <code>wait()</code> 方法释放了锁 。</li>
 <li><code>wait()</code> 通常被用于线程间交互&#x2F;通信，<code>sleep()</code>通常被用于暂停执行。</li>
 <li><code>wait()</code> 方法被调用后，线程不会自动苏醒，需要别的线程调用同一个对象上的 <code>notify()</code>或者 <code>notifyAll()</code> 方法。<code>sleep()</code>方法执行完成后，线程会自动苏醒，或者也可以使用 <code>wait(long timeout)</code> 超时后线程会自动苏醒。</li>
 <li><code>sleep()</code> 是 <code>Thread</code> 类的静态本地方法，<code>wait()</code> 则是 <code>Object</code> 类的本地方法。</li>

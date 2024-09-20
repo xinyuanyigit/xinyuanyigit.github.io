@@ -223,8 +223,8 @@
 <li>普通索引：目的就是加快查询速度，一张表中可以有多个。</li>
 <li>全文索引：全文索引一般只适用于char、varchar、text类型的字段，目的是为了在长文本中找到所需的关键字。在Mysql5.6之后，InnoDB存储引擎才支持。但我没在Mysql中用过。这种全文检索的话，一般使用ElasticSearch搜索引擎。</li>
 </ul>
-<h3 id="什么是回表？"><a href="#什么是回表？" class="headerlink" title="什么是回表？"></a>什么是回表？</h3><p>再InnoDB存储引擎中，非主键索引的叶子节点存储的是主键索引的值，当使用非主键索引进行查询时，数据库会先找到该主键的值，再根据这个主键值去定位和检索完整的数据，这个过程就叫做回表。如果查询的字段刚好是索引的值，那么就无需回表，直接查询到数据。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">如主键索引，如果一条 SQL 需要查询主键，那么正好根据主键索引就可以查到主键。再如普通索引，如果一条 SQL 需要查询 name，name 字段正好有索引，那么直接根据这个索引就可以查到数据，也无需回表。</span><br></pre></td></tr></table></figure>
+<h3 id="什么是回表？"><a href="#什么是回表？" class="headerlink" title="什么是回表？"></a>什么是回表？</h3><p>在InnoDB存储引擎中，非主键索引的叶子节点存储的是主键索引的值，当使用非主键索引进行查询时，数据库会先找到该主键的值，再根据这个主键值去定位和检索完整的数据，这个过程就叫做回表。如果查询的字段刚好是索引的值，那么就无需回表，直接查询到数据。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">如主键索引，如果一条 SQL 需要查询主键，那么正好根据主键索引就可以查到主键。再如普通索引，如果一条 SQL 需要查询 name，name 字段正好有索引，那么直接根据这个索引就可以查到数据，也无需回表。可以用覆盖索引解决回表的问题。</span><br></pre></td></tr></table></figure>
 
 <h3 id="联合索引：多个字段一起组成的索引"><a href="#联合索引：多个字段一起组成的索引" class="headerlink" title="联合索引：多个字段一起组成的索引"></a>联合索引：多个字段一起组成的索引</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> INDEX index_product_no_name <span class="keyword">ON</span> product(product_no, name);</span><br></pre></td></tr></table></figure>
 
